@@ -29,6 +29,24 @@ class MenuManagement:
                 return "s videos"
             return "videos"
 
+    def __AddElementMenu(self):
+        print("\n===================0===================\n")
+        print("\tAÑADIR A MI"+ self.__MenuFormat(False).upper() +"\n")
+        newElementStr = self.__TakeElementInfo()
+        files.AddEntry(newElementStr,self.__format) #Modificar
+        print("\nEl elemento se ha añadido a \"mi{0}\".".format(self.__MenuFormat(False)))
+
+    def __TakeElementInfo(self):
+        name = input("Nombre: ")
+        author = input("Autor: ")
+        album = input("Álbum: ")
+        year = input("Año: ")
+        type = input("Género: ")
+        path = input("Archivo: ")
+        info = "¬".join([name, author, album, year, type, path, path])
+        return info
+
+
 
 class PincipalMenu (MenuManagement):
 
@@ -57,7 +75,23 @@ class PincipalMenu (MenuManagement):
         if self.__answer == "0":
             return
         elif self.__answer == "1":
-            ThirdMenu(_format)
+            self.__ThirdMenu()
         elif self.__answer == "2":
-            FourthMenu(_format)
-        __SecondMenu(_format)
+            self.__FourthMenu()
+        self.__SecondMenu()
+
+    def __ThirdMenu(self):
+        print("\n===================0===================\n")
+        print("\tMI"+ self.__MenuFormat(False).upper()+"\n")
+        print("1. Ver mi"+ self.__MenuFormat(False) +".\n2. Buscar.\n3. Añadir.\n\n0. Atrás.\n")
+        self.__Answer(["0","1","2","3"])
+        if answer3 == "0":
+            return
+        elif self.__answer == "1":
+            listName = "mi"+ self.__MenuFormat(False)
+            SortListMenu(_format, listName ) #MENU DE ORDENAR LISTA
+        elif self.__answer == "2":
+            SearchMenu(_format)
+        elif self.__answer == "3":
+            AddElementMenu(_format)
+        self.__ThirdMenu()
