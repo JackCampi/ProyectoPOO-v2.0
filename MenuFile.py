@@ -43,8 +43,71 @@ class MenuManagement:
         year = input("Año: ")
         type = input("Género: ")
         path = input("Archivo: ")
-        info = "¬".join([name, author, album, year, type, path, path])
+        info = "¬".join([name, author, album, year, type, path])
         return info
+
+    def __SortListMenu(self, listName , listObject):
+        print("\n===================0===================\n")
+        print("\tVER "+ listName.upper() +"\n") #LISTNAME
+        print(self.__SortListMenuOptions())
+        self.__Answer(["0","1","2","3","4","5"])
+        if self.__answer == "0":
+            return
+        elif self.__answer == "1":
+            listToPrint = files.ReadFormat(_format,listPath)
+            sortedList = Miscellaneous.SortList(listToPrint,"name")
+            if len(sortedList) == 0:
+                self.__emptyListMenu()
+            else:
+                PrintList(_format,sortedList)
+                wait = input("Pulse Enter para continuar...")
+        elif self.__answer == "2":
+            listToPrint = files.ReadFormat(_format,listPath)
+            sortedList = Miscellaneous.SortList(listToPrint,"author")
+            if len(sortedList) == 0:
+                self.__emptyListMenu()
+            else:
+                PrintList(_format,sortedList)
+                wait = input("Pulse Enter para continuar...")
+        elif self.__answer == "3":
+            listToPrint = files.ReadFormat(_format,listPath)
+            sortedList = Miscellaneous.SortList(listToPrint,"album")
+            if len(sortedList) == 0:
+                self.__emptyListMenu()
+            else:
+                PrintList(_format,sortedList)
+                wait = input("Pulse Enter para continuar...")
+        elif self.__answer == "4":
+            listToPrint = files.ReadFormat(_format,listPath)
+            sortedList = Miscellaneous.SortList(listToPrint,"year")
+            if len(sortedList) == 0:
+                self.__emptyListMenu()
+            else:
+                PrintList(_format,sortedList)
+                wait = input("Pulse Enter para continuar...")
+        elif self.__answer == "5":
+            listToPrint = files.ReadFormat(_format,listPath)
+            sortedList = Miscellaneous.SortList(listToPrint,"type")
+            if len(sortedList) == 0:
+                self.__emptyListMenu()
+            else:
+                PrintList(_format,sortedList)
+                wait = input("Pulse Enter para continuar...")
+            SortListMenu(_format, listName)
+
+    def __SortListMenuOptions(self):
+	if self.__format == "music":
+		return "1. Por nombre.\n2. Por artista.\n3. Por álbum.\n4. Por año.\n5. Por género.\n\n0. Atrás.\n"
+	else:
+		return "1. Por nombre.\n2. Por protagonista.\n3. Por álbum.\n4. Por año.\n5. Por tipo.\n\n0. Atrás.\n"
+
+    def __emptyListMenu(self, listName):
+        print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+        print("No hay elementos en "+listName+".")
+        print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
+        wait = input("Pulse Enter para continuar...")
+        return
+
 
 
 
