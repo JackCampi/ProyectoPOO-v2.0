@@ -1,4 +1,8 @@
-#MenuFile
+import Playlist from Files
+import MainList from Files
+import os
+import Format
+
 class MenuManagement:
 
     def __init__(self):
@@ -32,8 +36,9 @@ class MenuManagement:
     def __AddElementMenu(self):
         print("\n===================0===================\n")
         print("\tAÑADIR A MI"+ self.__MenuFormat(False).upper() +"\n")
-        newElementStr = self.__TakeElementInfo()
-        files.AddEntry(newElementStr,self.__format) #Modificar
+        self.__newElement = self.__TakeElementInfo()
+        self.__mainList = MainList(self.__format)
+        self.__mainList.AddEntry(self.__newElement)
         print("\nEl elemento se ha añadido a \"mi{0}\".".format(self.__MenuFormat(False)))
 
     def __TakeElementInfo(self):
@@ -43,57 +48,59 @@ class MenuManagement:
         year = input("Año: ")
         type = input("Género: ")
         path = input("Archivo: ")
-        info = "¬".join([name, author, album, year, type, path])
-        return info
+        if self.__format == "music":
+            Element = Format.Music(name, author, album, year, type, path)
+        elif self.__format == "pictures":
+            Element = Format.Pictures(name, author, album, year, type, path)
+        else:
+            Element = Format.Videos(name, author, album, year, type, path)
+        return Element #construye un objeto de tipo format
 
-    def __SortListMenu(self, listObject):
+    def __SortListMenu(self, objectList, listName):
+        self.__listName = listName
+        self.__objectList = objectList #objeto de la clase Lists
         print("\n===================0===================\n")
-        print("\tVER "+ listName.upper() +"\n") #LISTNAME
+        print("\tVER "+ self.__listName.upper() +"\n")
         print(self.__SortListMenuOptions())
         self.__Answer(["0","1","2","3","4","5"])
         if self.__answer == "0":
             return
         elif self.__answer == "1":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"name")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("name")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
+                self.__PrintList(self.__sortedList)
                 wait = input("Pulse Enter para continuar...")
         elif self.__answer == "2":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"author")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("author")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
+                self.__PrintList(self.__sortedList)
                 wait = input("Pulse Enter para continuar...")
         elif self.__answer == "3":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"album")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("album")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
+                self.__PrintList(self.__sortedList)
                 wait = input("Pulse Enter para continuar...")
         elif self.__answer == "4":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"year")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("year")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
+                self.__PrintList(self.__sortedList)
                 wait = input("Pulse Enter para continuar...")
         elif self.__answer == "5":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"type")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("type")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
+                self.__PrintList(self.__sortedList)
                 wait = input("Pulse Enter para continuar...")
-            SortListMenu(_format, listName)
+        self.__SortListMenu(self.__objectList, self.__listName)
 
     def __SortListMenuOptions(self):
 	if self.__format == "music":
@@ -101,40 +108,46 @@ class MenuManagement:
 	else:
 		return "1. Por nombre.\n2. Por protagonista.\n3. Por álbum.\n4. Por año.\n5. Por tipo.\n\n0. Atrás.\n"
 
-    def __emptyListMenu(self, listName):
+    def __emptyListMenu(self):
         print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-        print("No hay elementos en "+listName+".")
+        print("No hay elementos en "+ self.__listName +".")
         print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
         wait = input("Pulse Enter para continuar...")
         return
 
-    def NotFoundMenu(_format, listName ):
-        print("No se encontró ningún elemento en " + listName +".\n")
+    def __NotFoundMenu(self, listName):
+        self.__listName = listName
+        print("No se encontró ningún elemento en " + self.__listName +".\n")
         print("1. Volver a buscar.\n0. Atrás.\n")
-        answer = Answer(["0","1"])
-        return answer
-
-    def PrintList(_format,_list):
-        PrintListHead(_format)
-        for dicIndex in range(len(_list)):
-            PrintListElement(_list , dicIndex)
-
-    def PrintListElement(_list,dicIndex = 0):
-        toPrint = "{0}.\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\t|\t{5}\n"
-        print(toPrint.format(dicIndex+1,_list[dicIndex]["name"],_list[dicIndex]["author"],_list[dicIndex]["album"],_list[dicIndex]["year"],_list[dicIndex]["type"]))
+        self.__Answer(["0","1"])
         return
 
-    def PrintListHead(_format):
-        if _format == "music":
+    def __PrintList(self, _list):
+        self.__list = _list
+        self.__PrintListHead()
+        for dicIndex in range(len(self.__list)):
+            self.__PrintListElement(self.__list , dicIndex)
+
+    def __PrintListElement(self, _list,dicIndex = 0):
+        self.__list = _list
+        self.__index = dicIndex
+        self.__toPrint = "{0}.\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\t|\t{5}\n"
+        self.__item = self.__list[self.__index] #cada item es un objeto de tipo Format
+        print(self.__toPrint.format(self.__index+1,self.__item.getName(),self.__item.getAuthor(),self.__item.getAlbum(),self.__item.getYear(),self.__item.getType()))
+        return
+
+    def __PrintListHead(self):
+        if self.__format == "music":
             print("No.\t|\tNombre\t|\tArtista\t|\tÁlbum\t|\tAño\t|\tGénero\n")
         else:
             print("No.\t|\tNombre\t|\tProtagonista\t|\tÁlbum\t|\tAño\t|\tTipo\n")
         return
 
-    def SelectListElement(listLength):
+    def __SelectListElement(self, listLength):
+        self.__listLength = listLength
         print("\n¿Cuál desea seleccionar? ")
-        selectElement = Answer([str(x) for x in range(1,listLength+1)])
-        return int(selectElement) - 1
+        self.__Answer([str(x) for x in range(1,self.__listLength+1)])
+        return int(self.__answer) - 1
 
 
 
@@ -157,9 +170,9 @@ class PincipalMenu (MenuManagement):
         elif self.__answer == "3":
             self.__format = "videos"
             self.__SecondMenu()
-        self.MainMenu()
+        self.MainMenu() #listo
 
-    def __SecondMenu(self): #FALTA MODIFICAR
+    def __SecondMenu(self):
         print("\n===================0===================\n")
         print("\t"+ self.__MenuFormat().upper()+"\n")
         print("1. Mi"+ self.__MenuFormat(False) +".\n2. Listas de reproducción.\n\n0. Atrás.\n")
@@ -170,84 +183,90 @@ class PincipalMenu (MenuManagement):
             self.__ThirdMenu()
         elif self.__answer == "2":
             self.__FourthMenu()
-        self.__SecondMenu()
+        self.__SecondMenu() #listo
 
     def __ThirdMenu(self):
         print("\n===================0===================\n")
         print("\tMI"+ self.__MenuFormat(False).upper()+"\n")
         print("1. Ver mi"+ self.__MenuFormat(False) +".\n2. Buscar.\n3. Añadir.\n\n0. Atrás.\n")
         self.__Answer(["0","1","2","3"])
-        if answer3 == "0":
+        if self.__answer == "0":
             return
         elif self.__answer == "1":
             MainList = MainList(self.__format)
-            self.__SortListMenu( MainList ) #MENU DE ORDENAR LISTA
+            self.__SortListMenu(MainList , "Mi"+self.__MenuFormat(False)) #MENU DE ORDENAR LISTA
         elif self.__answer == "2":
             self.__SearchMenu()
         elif self.__answer == "3":
-            AddElementMenu(_format)
+            self.__AddElementMenu()
         self.__ThirdMenu()
 
     def __SearchMenu(self):
         print("\n===================0===================\n")
-    	print("\tBUSCAR EN MI" + self.__MenuFormat(_format,False).upper()+ "\n")
+    	print("\tBUSCAR EN MI" + self.__MenuFormat(False).upper()+ "\n")
     	toSearch = input("¿Qué desea buscar? ")
-    	searchResults = Miscellaneous.SearchMainList(_format,toSearch)
+        MainList = MainList(self.__format)
+    	searchResults = MainList.Search(toSearch)
     	if len(searchResults) == 0 :
-    		answer = NotFoundMenu(_format, "mi" + MenuFormat(_format, False))
-    		if answer == "0":
+    		self.__NotFoundMenu( "mi" + self.__MenuFormat(False))
+    		if self.__answer == "0":
     			return
     		else:
-    			SearchMenu(_format)
+    			self.__SearchMenu()
     			return
     	elif len(searchResults) == 1:
-    		searchElement = searchResults[0]
-    		self.__FoundElementMenu(_format, searchElement)
+    		self.__searchElement = searchResults[0]
+    		self.__FoundElementMenu(self.__searchElement)
     		return
     	else:
-    		PrintList(_format,searchResults)
-    		searchElement = searchResults[SelectListElement(len(searchResults))]
-    		self.__FoundElementMenu(_format, searchElement)
+    		self.__PrintList(searchResults)
+    		self.__searchElement = searchResults[self.__SelectListElement(len(searchResults))]
+    		self.__FoundElementMenu(self.__searchElement)
     		return
 
-    def __FoundElementMenu(_format, foundElement):
+    def __FoundElementMenu(self, foundElement):
+        self.__foundElement = foundElement
         print("\n===================0===================\n")
-        PrintListHead(_format)
-        print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(foundElement["name"],foundElement["author"],foundElement["album"],foundElement["year"],foundElement["type"]))
+        self.__PrintListHead()
+        print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(self.__foundElement.getName(),self.__foundElement.getAuthor(),self.__foundElement.getAlbum(),self.__foundElement.getYear(),self.__foundElement.getType()))
         print("¿Qué desea hacer con este elemento?\n1. Añadir a lista de reproducción.\n2. Eliminar.\n3. Modificar información.\n\n0. Atrás.")
-        answer = Answer(["0","1","2","3"])
-        if answer == "0":
+        self.__Answer(["0","1","2","3"])
+        if self.__answer == "0":
             return
-        elif answer == "1":
-            AddToPlaylistMenu(_format,foundElement)
+        elif self.__answer == "1":
+            self.__AddToPlaylistMenu(foundElement)
             return
-        elif answer == "2":
-            files.DeleteEntry(foundElement, _format)
-            print("Se ha eliminado el elemento. Volviendo a \"MI" + MenuFormat(_format,False).upper()+"\".")
+        elif self.__answer == "2":
+            MainList = MainList(self.__format)
+            MainList.DeleteEntry(foundElement)
+            print("Se ha eliminado el elemento. Volviendo a \"MI" + self.__MenuFormat(False).upper()+"\".")
             return
-        elif answer == "3":
-            ModifyElementMenu(_format,foundElement)
+        elif self.__answer == "3":
+            self.__ModifyElementMenu(foundElement)
             return
 
-    def AddToPlaylistMenu(_format, toAddElement):
-        playlistList = files.GetPlaylists(_format)
-        if len(playlistList) == 0:
-            print("No se encontraron listas de reproducción en "+ MenuFormat(_format)+".")
+    def __AddToPlaylistMenu(self, toAddElement): #toAddElement es el objeto de tipo format
+        self.__playlists = PlaylistList(self.__format) #objeto tipo PlaylistList
+        self.__playlistList = self.__playlists.GetPlaylists()
+        self.__toAddElement = toAddElement
+        if len(self.__playlistList) == 0:
+            print("No se encontraron listas de reproducción en "+ self.__MenuFormat()+".")
             return
         else:
-            for playlistIndex in range(len(playlistList)):
-                print(str(playlistIndex+1)+"\t|\t"+ playlistList[playlistIndex] )
-            playlistName = playlistList[SelectListElement(len(playlistList))]
-            playlistPath = "playlists"+ os.sep + playlistName + ".txt"
-            files.AddEntry(toAddElement ,_format , playlistPath)
-            print("Se añadió \""+toAddElement["name"]+ "\" a " + playlistName + ".")
+            for playlistIndex in range(len(self.__playlistList)):
+                print(str(playlistIndex+1)+"\t|\t"+ self.__playlistList[playlistIndex] )
+            self.__playlistName = self.__playlistList[self.__SelectListElement(len(self.__playlistList))]
+            self.__playlistObject = Playlist(self.__format, self.__playlistName) #objeto de tipo Playlist
+            self.__playlistObject.AddEntry(self.__toAddElement) #mirar ques es param Entry
+            print("Se añadió \""+self.__toAddElement.getName()+ "\" a " + self.__playlistName + ".")
             return
 
-    def ModifyElementMenu(_format, oldElementDic):
+    def __ModifyElementMenu(self, oldElementObject):
         print("\nIngrese la nueva información del elemento.")
-        newElementDic = TakeElementInfo()
-        files.ModifyList(newElementDic,oldElementDic,_format)
-        print("Se ha modificado la información del elemento. Volviendo a \"MI" + MenuFormat(_format,False).upper()+"\".")
+        newElementObject = self.__TakeElementInfo()
+        MainList = MainList(self.__format)
+        MainList.ModifyList(newElementObject,oldElementObject)
+        print("Se ha modificado la información del elemento. Volviendo a \"MI" + self.__MenuFormat(False).upper()+"\".")
 
     def __FourthMenu(self):
         print("\n===================0===================\n")
@@ -257,87 +276,207 @@ class PincipalMenu (MenuManagement):
         if self.__answer == "0":
             return
         elif self.__answer == "1":
-            playlists = files.GetPlaylists(_format) #hay que crear la función para esto
-            if len(playlists) == 0:
+            self.__playlists = PlaylistList(self.__format) #objeto tipo PlaylistList
+            self.__playlistList = self.__playlists.GetPlaylists()
+            if len(self.__playlistList) == 0:
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-                print("No hay listas de reproducción en " + MenuFormat(_format) + ".")
+                print("No hay listas de reproducción en " + self.__MenuFormat() + ".")
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
                 wait = input("Pulse Enter para continuar...")
             else:
-                for playlistIndex in range(len(playlists)):
-                    print(str(playlistIndex+1)+"\t|\t"+playlists[playlistIndex] + ".\n")
+                for playlistIndex in range(len(self.__playlistList)):
+                    print(str(playlistIndex+1)+"\t|\t"+self.__playlistList[playlistIndex] + ".\n")
                     print("\n1. Seleccionar una lista de reproducción.\n0. Atrás.\n")
-                    answer1 = Answer(["0","1"])
-                    if answer1 == "1":
-                        playlistName = playlists[SelectListElement(len(playlists))]
-                        PlaylistMenu(_format, playlistName)
+                    self.__Answer(["0","1"])
+                    if self.__answer == "1":
+                        self.__playlistName = self.__playlistList[self.__SelectListElement(len(self.__playlistList))]
+                        FifthMenu = PlaylistMenu(self.__format, self.__playlistName) #crea el objeto de meú de playlist
+                        FifthMenu.PlaylistMenu()
         elif self.__answer == "2":
-            NewPlaylistMenu(_format) #falta pasar
+            self.__NewPlaylistMenu() #falta pasar --> ya esta // corregir llamadas a esta función
         elif self.__answer == "3":
-            SearchPlaylistMenu(_format) #falta pasar
+            self.__SearchPlaylistMenu() #falta pasar --> ya esta // corregir llamadas a esta función
         elif self.__answer == "4":
-            SearchPlaylistMenu(_format,"eliminar") #faltapasar
-        self.__FourthMenu(_format)
+            self.__SearchPlaylistMenu("eliminar") #faltapasar --> ya esta // corregir llamadas a esta función
+        self.__FourthMenu()
 
-    def SearchPlaylistMenu(_format, toDo = "buscar"):
+    def __SearchPlaylistMenu(self, toDo = "buscar"): #ya esta pasada a objetos //si quieres mirar instanciacion de objetos
+        self.__toDo = toDo
         print("\n===================0===================\n")
-        toSearch = input("¿Qué lista de reproducción desea "+ toDo +"? ")
-        results = Miscellaneous.SearchItemInList(files.GetPlaylists(_format),toSearch)
-        if len(results) == 0:
+        self.__toSearch = input("¿Qué lista de reproducción desea "+ self.__toDo +"? ")
+        self.__playlists = PlaylistList(self.__format) #objeto tipo PlaylistList
+        self.__results = self.__playlists.SearchPlaylist(self.__toSearch)
+        if len(self.__results) == 0:
             print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-            print("No se encontró ninguna lista de reproducción en " + MenuFormat(_format) +".\n")
+            print("No se encontró ninguna lista de reproducción en " + self.__MenuFormat() +".\n")
             print("1. Volver a buscar.\n0. Atrás.\n")
-            answer = Answer(["0","1"])
-            if answer == "0":
+            self.__Answer(["0","1"])
+            if self.__answer == "0":
                 return
-            elif answer == "1":
-                SearchPlaylistMenu(_format, toDo )
-        elif len(results) == 1:
-            foundPlaylist = results[0]
-            if toDo == "eliminar":
-                print("¿Desea eliminar "+foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
-                answer1 = Answer(["0","1"])
-                if answer1 == "0":
+            elif self.__answer == "1":
+                self.__SearchPlaylistMenu(self.__toDo )
+        elif len(self.__results) == 1:
+            self.__foundPlaylist = self.__results[0]
+            if self.__toDo == "eliminar":
+                print("¿Desea eliminar "+self.__foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
+                self.__Answer(["0","1"])
+                if self.__answer == "0":
                     return
-                elif answer1 == "1":
-                    files.DeletePlaylist(_format,foundPlaylist)
-                    print("Se ha eliminado " + foundPlaylist +".")
+                elif self.__answer == "1":
+                    toDeletePlaylist = Playlist(self.__format, self.__foundPlaylist)
+                    toDeletePlaylist.DeletePlaylist() # funcion que elimine playlist
+                    print("Se ha eliminado " + self.__foundPlaylist +".")
                     return
-            elif toDo == "buscar":
-                PlaylistMenu(_format, foundPlaylist)
+            elif self.__toDo == "buscar":
+                self.__playlist = PlaylistMenuFile(self.__format,self.__foundPlaylist) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist.PlaylistMenu() #llama al método PlaylistMenu de ese objeto
                 return
         else:
             print("Listas encontradas:\n")
-            for foundPlaylistIndex in range(len(results)):
-                print(str(foundPlaylistIndex+1)+"\t|\t"+results[foundPlaylistIndex])
-            foundPlaylist = results[SelectListElement(len(results))]
-            if toDo == "eliminar":
-                print("¿Desea eliminar "+foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
-                answer1 = Answer(["0","1"])
-                if answer1 == "0":
+            for foundPlaylistIndex in range(len(self.__results)):
+                print(str(foundPlaylistIndex+1)+"\t|\t"+self.__results[foundPlaylistIndex])
+            self.__foundPlaylist = self.__results[self.__SelectListElement(len(self.__results))]
+            if self.__toDo == "eliminar":
+                print("¿Desea eliminar "+self.__foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
+                self.__Answer(["0","1"])
+                if self.__answer == "0":
                     return
-                elif answer1 == "1":
-                    files.DeletePlaylist(_format,foundPlaylist)
-                    print("Se ha eliminado " + foundPlaylist +".")
-                    return
-            elif toDo == "buscar":
-                PlaylistMenu(_format, foundPlaylist)
+                elif self.__answer == "1":
+                    toDeletePlaylist = Playlist(self.__format, self.__foundPlaylist)
+                    toDeletePlaylist.DeletePlaylist() # funcion que elimine playlist
+                    print("Se ha eliminado " + self.__foundPlaylist +".")
+            elif self.__toDo == "buscar":
+                self.__playlist = PlaylistMenuFile(self.__format,self.__foundPlaylist) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist.PlaylistMenu() #llama al método PlaylistMenu de ese objeto
                 return
 
-    def NewPlaylistMenu(_format):
+    def __NewPlaylistMenu(self): #ya esta pasada a objetos. Solo faltan algunas funciones de juan
         print("\n===================0===================\n")
         print("\tCREAR LISTA DE REPRODUCCIÓN\n")
-        playlistName = input("Nombre de la lista de reproducción: ")
-        files.MakePlaylist(_format,playlistName)
+        self.__playlistName = input("Nombre de la lista de reproducción: ")
+        playlist = Playlist(self.__format,self.__playListName)
         print("La lista de reproducción ha sido creada.\n\n¿Desea añadir elementos a la lista?\n1. Aceptar.\n0. Cancelar.\n")
-        answer = Answer(["0","1"])
-        if answer == "0":
+        self.__Answer(["0","1"])
+        if self.__answer == "0":
             return
         else:
-            adding = True
-            while adding == True:
-                AddPlaylistElement(_format, playlistName)
+            self.__adding = True
+            while self.__adding == True:
+                self.__playlist = PlaylistMenuFile(self.__format,self.playlistName) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist.AddPlaylistElement()
                 print("¿Desea añadir otro elemento a la lista?\n1. Aceptar.\n0. Cancelar.\n")
-                answer1 = Answer(["0","1"])
-                if answer1 == "0":
-                    adding = False
+                self.__Answer(["0","1"])
+                if self.__answer == "0":
+                    self.__adding = False
+
+class PlaylistMenu(MenuManagement):
+
+    def __init__(self,_format, playlistName):
+        self.__format = _format
+        self.__playListName = playlistName
+        self.__playlist = Playlist(self.__format, self.__playListName)
+
+    def PlaylistMenu(self):
+        print("\n===================0===================\n")
+    	print("\t" + self.__playlistName.upper() + "\n")
+    	print("1. Ver contenido de la lista.\n2. Añadir un elemento.\n3. Eliminar un elemento.\n4. Eliminar lista.\n\n0. Atrás.\n")
+    	self.__Answer(["0", "1", "2", "3", "4"])
+        if answer == "0":
+    		return
+    	elif self.__answer == "1":
+    		self.__PrintPlaylist()
+    		wait = input("Pulse Enter para continuar...")
+    		self.PlaylistMenu()
+    		return
+    	elif self.__answer == "2":
+    		self.AddPlaylistElement()
+    		self.PlaylistMenu()
+    		return
+    	elif self.__answer == "3":
+    		self.__DeletePlaylistElement()
+    		self.PlaylistMenu()
+    		return
+    	elif self.__answer == "4":
+            self.__playlist.DeletePlaylist()
+    		print("La lista fue eliminada.")
+    		return
+
+    def AddPlaylistElement(self):
+        self.__element = input("¿Qué elemento desea agregar a la lista? ")
+        self.__mainList = MainList(self.__format)
+        self.__results = self.__mainList.Search(self.__element)
+        if len(self.__results) == 0:
+    		self.__NotFoundMenu("mi" + self.__MenuFormat(False))
+    		if self.__answer == "0":
+    			return
+    		else:
+    			self.AddPlaylistElement()
+        elif len(self.__results) == 1:
+            self.__finalElement = self.__results[0]
+            self.__PrintListHead()
+            self.__PrintListElement(self.__results)
+            print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+            self.__Answer(["0", "1"])
+            if self.__answer == 0:
+                print("No se añadió el elemento.\n")
+                return
+            else:
+                self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
+                print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+        else:
+            self.__PrintListHead()
+            self.__PrintList(self.__results)
+            self.__index = self.__SelectListElement(len(self.__results))
+            self.__finalElement = self.__results[self.__index]
+            self.__PrintListHead()
+            self.__PrintListElement(self.__results,self.__index)
+            print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+            self.__Answer(["0", "1"])
+            if self.__answer == 0:
+                print("No se añadió el elemento.\n")
+                return
+            else:
+    			self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
+    			print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+
+
+    def __PrintPlaylist(self):
+        self.__SortListMenu(self.__playlist, self.__playListName)
+ 	   return
+
+    def __DeletePlaylistElement(self):
+    	self.__element = input("¿Qué elemento desea eliminar? ")
+    	self.__results = self.__playlist.Search(self.__element)
+        if len(self.__results) == 0:
+    		self.__NotFoundMenu(self.__playlistName)
+    		if self.__answer == "0":
+    			return
+    		else:
+    			self.__DeletePlaylistElement()
+        elif len(self.__results) == 1:
+            self.__finalElement = self.__results[0]
+            self.__PrintListHead()
+            self.__PrintListElement(self.__results)
+    		print("¿Desea eliminar este elemento de " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+    		self.__Answer(["0", "1"])
+    		if self.__answer == 0:
+    			print("El elemento no se eliminó.\n")
+    			return
+    		else:
+                self.__playlist.DeleteEntry(self.__finalElement)#mirar que es param Entry
+    			print("Se eliminó el elemento de " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+        else:
+    		self.__PrintListHead
+            self.__PrintList(self.__results)
+            self.__index = self.__SelectListElement(len(self.__results))
+    		self.__finalElement = self.__results[self.__index]
+    		self.__PrintListHead()
+            self.__PrintListElement(self.results,self.__index)
+    		print("¿Desea eliminar este elemento de " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+    		self.__Answer(["0", "1"])
+    		if self.__answer == 0:
+    			print("El elemento no se eliminó.\n")
+    			return
+    		else:
+    			self.__playlist.DeleteEntry(self.__finalElement)#mirar que es param Entry
+    			print("Se eliminó el elemento de " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")

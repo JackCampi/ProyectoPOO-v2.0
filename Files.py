@@ -82,7 +82,44 @@ class Lists:
         """
         self.DeleteEntry(oldEntry)
         self.AddEntry(newEntry)
-
+    def SortList(self, key):
+        """
+        función propia de las listas que ordena la lista (MainList o playlist)
+        de acuerdo a un criterio (nombre, autor, etc...)
+        RETURN: lista ordenada de objetos
+        """
+        self.__key = key
+        if self.__key == "name":
+            return sorted(self.list, key = lambda object : object.getName())
+        elif self.__key == "author":
+            return sorted(self.list, key = lambda object : object.getAuthor())
+        elif self.__key == "album":
+            return sorted(self.list, key = lambda object : object.getAlbum())
+        elif self.__key == "year":
+            return sorted(self.list, key = lambda object : object.getYear())
+        elif self.__key == "type":
+            return sorted(self.list, key = lambda object : object.getType())
+    def Search(self, item):
+        """
+        función que recibe como parametro un item a buscar, busca en todas sus propiedades
+        y retorna una lista de coincidencias (objetos ordenados por nombre)
+        RETURN: lista de objetos ordenados por nombre
+        """
+        self.__item = item
+        self.__itemsFound = set()
+        for object in self.list:
+            if self.__item in object.getName():
+                self.__itemsFound.add(object)
+            elif self.__item in object.getAuthor():
+                self.__itemsFound.add(object)
+            elif self.__item in object.getAlbum():
+                self.__itemsFound.add(object)
+            elif self.__item in object.getYear():
+                self.__itemsFound.add(object)
+            elif self.__item in object.getType():
+                self.__itemsFound.add(object)
+        self.__itemsFoundList = list(self.__itemsFound)
+        return sorted(self.__itemsFoundList, key = lambda object : object.getName())
 
 class Mainlist(Lists):
     def __init__(self, _format, name="Main_list.txt"):
@@ -138,6 +175,18 @@ class PlaylistList:
 
     def GetPlaylists(self):
         return self.__playlists.copy()
+    def SearchPlaylist(self, playlistName):
+        """
+        funcion que busca un nombre de una playlist dentro de todas
+        las playlist existentes
+        RETURN: lista de coincidencias
+        """
+        self.__playlistName = playlistName
+        self.__itemsFoundList = []
+        for item in self.playlists:
+            if self.playlistName in item:
+                self.__itemsFoundList.append(item)
+        return sorted(self.__itemsFoundList)
 
 
 # PRUEBAS
