@@ -1,5 +1,5 @@
 #MenuFile
-import Mainlist from Files
+import Files
 class MenuManagement:
 
     def __init__(self):
@@ -50,7 +50,7 @@ class MenuManagement:
 
     def __SortListMenu(self, objectList, listName):
         self.__listName = listName
-        self.__objectList = objectList
+        self.__objectList = objectList #objeto de la clase Lists
         print("\n===================0===================\n")
         print("\tVER "+ self.__listName.upper() +"\n")
         print(self.__SortListMenuOptions())
@@ -235,18 +235,20 @@ class PincipalMenu (MenuManagement):
             ModifyElementMenu(_format,foundElement)
             return
 
-    def AddToPlaylistMenu(_format, toAddElement):
-        playlistList = files.GetPlaylists(_format)
-        if len(playlistList) == 0:
-            print("No se encontraron listas de reproducción en "+ MenuFormat(_format)+".")
+    def __AddToPlaylistMenu(self, toAddElement): #ya esta corregido a objetos
+        self.__playlists = PlaylistList(self.__format) #objeto tipo PlaylistList
+        self.__playlistList = self.__playlists.GetPlaylists()
+        self.__toAddElement = toAddElement
+        if len(self.__playlistList) == 0:
+            print("No se encontraron listas de reproducción en "+ self.__MenuFormat()+".")
             return
         else:
-            for playlistIndex in range(len(playlistList)):
-                print(str(playlistIndex+1)+"\t|\t"+ playlistList[playlistIndex] )
-            playlistName = playlistList[SelectListElement(len(playlistList))]
-            playlistPath = "playlists"+ os.sep + playlistName + ".txt"
-            files.AddEntry(toAddElement ,_format , playlistPath)
-            print("Se añadió \""+toAddElement["name"]+ "\" a " + playlistName + ".")
+            for playlistIndex in range(len(self.__playlistList)):
+                print(str(playlistIndex+1)+"\t|\t"+ self.__playlistList[playlistIndex] )
+            self.__playlistName = self.__playlistList[self.__SelectListElement(len(self.__playlistList))]
+            self.__playlistObject = Playlist(self.__format, self.__playlistName) #objeto de tipo Playlist
+            self.__playlistObject.AddEntry(self.__toAddElement) #mirar ques es param Entry
+            print("Se añadió \""+self.__toAddElement.getName()+ "\" a " + self.__playlistName + ".")
             return
 
     def ModifyElementMenu(_format, oldElementDic):
@@ -285,9 +287,10 @@ class PincipalMenu (MenuManagement):
             SearchPlaylistMenu(_format,"eliminar") #faltapasar
         self.__FourthMenu(_format)
 
-    def SearchPlaylistMenu(_format, toDo = "buscar"):
+    def __SearchPlaylistMenu(self, toDo = "buscar"):
+        self.__toDo = toDo
         print("\n===================0===================\n")
-        toSearch = input("¿Qué lista de reproducción desea "+ toDo +"? ")
+        toSearch = input("¿Qué lista de reproducción desea "+ self.__toDo +"? ")
         results = Miscellaneous.SearchItemInList(files.GetPlaylists(_format),toSearch)
         if len(results) == 0:
             print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
