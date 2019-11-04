@@ -466,7 +466,7 @@ class PlaylistMenu(MenuManagement):
                 self.__playlist.DeleteEntry(self.__finalElement)#mirar que es param Entry
                 print("Se eliminó el elemento de " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
         else:
-            self.PrintListHead
+            self.PrintListHead()
             self.PrintList(self.__results)
             self.index = self.SelectListElement(len(self.__results))
             self.__finalElement = self.__results[self.index]
