@@ -62,35 +62,35 @@ class MenuManagement:
             if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList) # cambiar cuando cambie PrintList
+                self.__PrintList(self.__sortedList)
                 self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "2":
             self.__sortedList = self.__objectList.SortList("author")
             if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList) # cambiar cuando cambie PrintList
+                self.__PrintList(self.__sortedList)
                 self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "3":
             self.__sortedList = self.__objectList.SortList("album")
             if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList) # cambiar cuando cambie PrintList
+                self.__PrintList(self.__sortedList)
                 self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "4":
             self.__sortedList = self.__objectList.SortList("year")
             if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList) # cambiar cuando cambie PrintList
+                self.__PrintList(self.__sortedList)
                 self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "5":
             self.__sortedList = self.__objectList.SortList("type")
             if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList) # cambiar cuando cambie PrintList
+                self.__PrintList(self.__sortedList)
                 self.__wait = input("Pulse Enter para continuar...")
         self.__SortListMenu(self.__objectList, self.__listName)
 
@@ -114,27 +114,33 @@ class MenuManagement:
         self.__Answer(["0","1"])
         return self.__answer
 
-    def PrintList(_format,_list):
-        PrintListHead(_format)
-        for dicIndex in range(len(_list)):
-            PrintListElement(_list , dicIndex)
+    def __PrintList(self, _list):
+        self.__list = _list
+        self.__PrintListHead()
+        for dicIndex in range(len(self.__list)):
+            self.__PrintListElement(self.__list , dicIndex)
 
-    def PrintListElement(_list,dicIndex = 0):
-        toPrint = "{0}.\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\t|\t{5}\n"
-        print(toPrint.format(dicIndex+1,_list[dicIndex]["name"],_list[dicIndex]["author"],_list[dicIndex]["album"],_list[dicIndex]["year"],_list[dicIndex]["type"]))
+    def __PrintListElement(_list,dicIndex = 0):
+        self.__list = _list
+        self.__index = dicIndex
+        self.__toPrint = "{0}.\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\t|\t{5}\n"
+        print(self.__toPrint.format(self.__index+1,self.__list[self.__index].getName()
+            ,self.__list[self.__index].getAuthor(),self.__list[self.__index].getAlbum()
+            ,self.__list[self.__index].getYear(),self.__list[self.__index].getType()))
         return
 
-    def PrintListHead(_format):
-        if _format == "music":
+    def __PrintListHead(self):
+        if self.__format == "music":
             print("No.\t|\tNombre\t|\tArtista\t|\tÁlbum\t|\tAño\t|\tGénero\n")
         else:
             print("No.\t|\tNombre\t|\tProtagonista\t|\tÁlbum\t|\tAño\t|\tTipo\n")
         return
 
-    def SelectListElement(listLength):
+    def __SelectListElement(listLength):
+        self.__listLength = listLength
         print("\n¿Cuál desea seleccionar? ")
-        selectElement = Answer([str(x) for x in range(1,listLength+1)])
-        return int(selectElement) - 1
+        self.__selectElement = self.__Answer([str(x) for x in range(1,self.__listLength+1)])
+        return int(self.__selectElement) - 1
 
 
 

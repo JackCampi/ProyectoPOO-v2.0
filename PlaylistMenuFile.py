@@ -15,7 +15,7 @@ class PlaylistMenu(MenuManagement):
         if answer == "0":
     		return
     	elif self.__answer == "1":
-    		self.PrintPlaylist(self.__format, self.__playlistName) #cambiar el llamado cuando este lista
+    		self.PrintPlaylist()
     		wait = input("Pulse Enter para continuar...")
     		self.PlaylistMenu()
     		return
@@ -87,18 +87,15 @@ class PlaylistMenu(MenuManagement):
 	- Como argumentos recibe el formato sobre el que se está trabajando y el
 	nombre de la lista de reproducción a la cual se le va a añadir el elemento.
 	- Al terminar, vuelve al menú específico de la lista."""
-    def PrintPlaylist(self, _format, playlistName): #toca modificar completamente esta funcion/ mirar SortListMenu
-
+    def PrintPlaylist(self):
+        self.__SortListMenu(self.__playlist, self.__playListName)
+ 	   return
 	       """Esta función construye la ruta de la lista de reproducción para pasarla
 	como argumento en el menú de listas ordenadas, donde el usuario puede escoger
 	el orden por el cual desea visualizar el contenido de la lista.
 	-Como argumento recibe el formato sobre el que se está trabajando y el nombre
 	de la lista.
 	- Al terminar vuelve al menú específico de la lista."""
-
-	   playlistPath = "playlists" + os.sep + playlistName + ".txt"
-	   SortListMenu(_format, playlistName, playlistPath)
-	   return
 
     def __DeletePlaylistElement(self):
     	self.__element = input("¿Qué elemento desea eliminar? ")
