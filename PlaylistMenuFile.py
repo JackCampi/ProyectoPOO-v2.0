@@ -53,7 +53,7 @@ class PlaylistMenu(MenuManagement):
     			self.__AddPlaylistElement()
         elif len(self.__results) == 1:
             self.__finalElement = self.__results[0]
-    		self.__PrintListHead()
+            self.__PrintListHead()
             self.__PrintListElement(self.__results)
     		print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
     		self.__Answer(["0", "1"])
@@ -62,7 +62,7 @@ class PlaylistMenu(MenuManagement):
     			return
             else:
                 self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
-    			print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+                print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
         else:
             self.__PrintListHead()
             self.__PrintList(self.__results)
