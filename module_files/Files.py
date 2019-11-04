@@ -1,7 +1,7 @@
 """Módulo Files, maneja todo lo relacionado con los archivos y la
     representación interna de los elementos"""
 import os
-import Format
+from module_files import Format
 
 
 class Lists:
@@ -20,7 +20,7 @@ class Lists:
         self.list = []
         self.length = 0
         
-    def open(self):
+    def Open(self):
         fileHandler = open(self.path, "r")
         self.list = []
         constructor = None
@@ -82,6 +82,7 @@ class Lists:
         """
         self.DeleteEntry(oldEntry)
         self.AddEntry(newEntry)
+
     def SortList(self, key):
         """
         función propia de las listas que ordena la lista (MainList o playlist)
@@ -99,6 +100,7 @@ class Lists:
             return sorted(self.list, key = lambda object : object.getYear())
         elif self.__key == "type":
             return sorted(self.list, key = lambda object : object.getType())
+
     def Search(self, item):
         """
         función que recibe como parametro un item a buscar, busca en todas sus propiedades
@@ -121,6 +123,7 @@ class Lists:
         self.__itemsFoundList = list(self.__itemsFound)
         return sorted(self.__itemsFoundList, key = lambda object : object.getName())
 
+
 class Mainlist(Lists):
     def __init__(self, _format, name="Main_list.txt"):
         """
@@ -132,7 +135,7 @@ class Mainlist(Lists):
         :param name: El nombre del archivo de la lista, por defecto es "Main_list.txt
         """
         super().__init__(_format, name)
-        self.open()
+        self.Open()
 
 
 class Playlist(Lists):
@@ -152,7 +155,7 @@ class Playlist(Lists):
             fileHandler = open(self.path, "w")
             fileHandler.close()
         else:
-            self.open()
+            self.Open()
 
     def DeletePlaylist(self):
         """
@@ -175,6 +178,7 @@ class PlaylistList:
 
     def GetPlaylists(self):
         return self.__playlists.copy()
+
     def SearchPlaylist(self, playlistName):
         """
         funcion que busca un nombre de una playlist dentro de todas
