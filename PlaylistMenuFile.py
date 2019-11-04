@@ -1,9 +1,12 @@
 
 import MenuManagement from MenuFile
+import Playlist from Files
+import MainList from Files
 class PlaylistMenu(MenuManagement):
     def __init__(self,_format, playlistName):
         self.__format = _format
         self.__playListName = playlistName
+        self.__playlist = Playlist(self.__format, self.__playListName)
     def PlaylistMenu(self):
         print("\n===================0===================\n")
     	print("\t" + self.__playlistName.upper() + "\n")
@@ -12,20 +15,20 @@ class PlaylistMenu(MenuManagement):
         if answer == "0":
     		return
     	elif self.__answer == "1":
-    		PrintPlaylist(self.__format, self.__playlistName) #cambiar el llamado cuando este lista
+    		self.PrintPlaylist(self.__format, self.__playlistName) #cambiar el llamado cuando este lista
     		wait = input("Pulse Enter para continuar...")
-    		PlaylistMenu()
+    		self.PlaylistMenu()
     		return
     	elif self.__answer == "2":
-    		__AddPlaylistElement()
-    		PlaylistMenu()
+    		self.__AddPlaylistElement()
+    		self.PlaylistMenu()
     		return
     	elif self.__answer == "3":
-    		DeletePlaylistElement(self.__format, self.__playlistName)
-    		PlaylistMenu()
+    		self.DeletePlaylistElement(self.__format, self.__playlistName)
+    		self.PlaylistMenu()
     		return
     	elif self.__answer == "4":
-    		files.DeletePlaylist(self.__format, self.__playlistName) #mirar con juan como se elimina la playlist
+            self.__playlist.DeletePlaylist()
     		print("La lista fue eliminada.")
     		return
 	"""Esta función corresponde al menú específico de las listas de reproducción,
@@ -40,28 +43,30 @@ class PlaylistMenu(MenuManagement):
 
     def __AddPlaylistElement(self):
         self.__element = input("¿Qué elemento desea agregar a la lista? ")
-        self.__results = Miscellaneous.SearchMainList(_format, element)#mirar como se busca en MainList
-        if len(results) == 0:
+        self.__mainList = MainList(self.__format)
+        self.__results = self.__mainList.Search(self.__element)
+        if len(self.__results) == 0:
     		option = NotFoundMenu(_format, "mi" + self.__MenuFormat(False))#esperar a cambiar NotFoundMenu
     		if option == "0":
     			return
     		else:
-    			__AddPlaylistElement()
+    			self.__AddPlaylistElement()
         elif len(self.__results) == 1:
     		self.__finalElement = self.__results[0]
     		PrintListHead(_format)#mirar como funciona esta funcion/esperar a que la cambien
             #mirar como se llaman las propiedades de los objetos, se puede cambiar por un PrintListElement
     		print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(finalElement["name"],finalElement["author"],finalElement["album"],finalElement["year"],finalElement["type"]))
-    		print("¿Desea añadir este elemento a " + playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+    		print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
     		self.__Answer(["0", "1"])
     		if self.__answer == 0:
     			print("No se añadió el elemento.\n")
     			return
-    		else: #mirar como se añade una entrada a la lista
-    			playlistPath = "playlists" + os.sep + playlistName + ".txt"
-    			files.AddEntry(finalElement, _format, playlistPath)
-    			print("Se añadió \""+finalElement["name"] + "\" a " + playlistName + ". Volviendo al menú de la lista de reproducción.")#editar
+    		else:
+                self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
+                #cambiar .name por getter
+    			print("Se añadió \""+ self.__finalElement.name + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
         else:
+            #añadir in PrintListHead
             #añardir un PrintList con los resultados
     		self.__finalElement = results[SelectListElement(len(results))]#cuando cambien SelectListElement
     		PrintListHead(_format)#cuando cambien PrintListHead
@@ -72,10 +77,10 @@ class PlaylistMenu(MenuManagement):
     		if self.__answer == 0:
     			print("No se añadió el elemento.\n")
     			return
-    		else:#mirar como se añade una entrada a la lista
-    			playlistPath = "playlists" + os.sep + playlistName + ".txt"
-    			files.AddEntry(finalElement, _format, playlistPath)
-    			print("Se añadió \""+finalElement["name"] + "\" a " + playlistName + ". Volviendo al menú de la lista de reproducción.")#editar
+    		else:
+    			self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
+                #cambiar .name por getter
+    			print("Se añadió \""+ self.__finalElement.name + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
 
 
 	"""Esta función se encarga de buscar un elemento del formato que se está
