@@ -187,8 +187,8 @@ class PlaylistList:
         """
         self.__playlistName = playlistName
         self.__itemsFoundList = []
-        for item in self.playlists:
-            if self.playlistName in item:
+        for item in self.__playlists:
+            if self.__playlistName in item:
                 self.__itemsFoundList.append(item)
         return sorted(self.__itemsFoundList)
 
