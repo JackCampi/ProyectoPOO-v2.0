@@ -1,5 +1,6 @@
 #MenuFile
 import Files
+import PlaylistMenuFile
 class MenuManagement:
 
     def __init__(self):
@@ -280,73 +281,77 @@ class PincipalMenu (MenuManagement):
                         playlistName = playlists[SelectListElement(len(playlists))]
                         PlaylistMenu(_format, playlistName)
         elif self.__answer == "2":
-            NewPlaylistMenu(_format) #falta pasar
+            NewPlaylistMenu(_format) #falta pasar --> ya esta // corregir llamadas a esta función
         elif self.__answer == "3":
-            SearchPlaylistMenu(_format) #falta pasar
+            SearchPlaylistMenu(_format) #falta pasar --> ya esta // corregir llamadas a esta función
         elif self.__answer == "4":
-            SearchPlaylistMenu(_format,"eliminar") #faltapasar
+            SearchPlaylistMenu(_format,"eliminar") #faltapasar --> ya esta // corregir llamadas a esta función
         self.__FourthMenu(_format)
 
-    def __SearchPlaylistMenu(self, toDo = "buscar"):
+    def __SearchPlaylistMenu(self, toDo = "buscar"): #ya esta pasada a objetos //si quieres mirar instanciacion de objetos
         self.__toDo = toDo
         print("\n===================0===================\n")
-        toSearch = input("¿Qué lista de reproducción desea "+ self.__toDo +"? ")
-        results = Miscellaneous.SearchItemInList(files.GetPlaylists(_format),toSearch)
-        if len(results) == 0:
+        self.__toSearch = input("¿Qué lista de reproducción desea "+ self.__toDo +"? ")
+        self.__playlists = PlaylistList(self.__format) #objeto tipo PlaylistList
+        self.__results = self.__playlists.SearchPlaylist(self.__toSearch)
+        if len(self.__results) == 0:
             print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-            print("No se encontró ninguna lista de reproducción en " + MenuFormat(_format) +".\n")
+            print("No se encontró ninguna lista de reproducción en " + self.__MenuFormat() +".\n")
             print("1. Volver a buscar.\n0. Atrás.\n")
-            answer = Answer(["0","1"])
-            if answer == "0":
+            self.__Answer(["0","1"])
+            if self.__answer == "0":
                 return
-            elif answer == "1":
-                SearchPlaylistMenu(_format, toDo )
-        elif len(results) == 1:
-            foundPlaylist = results[0]
-            if toDo == "eliminar":
-                print("¿Desea eliminar "+foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
-                answer1 = Answer(["0","1"])
-                if answer1 == "0":
+            elif self.__answer == "1":
+                self.__SearchPlaylistMenu(self.__toDo )
+        elif len(self.__results) == 1:
+            self.__foundPlaylist = self.__results[0]
+            if self.__toDo == "eliminar":
+                print("¿Desea eliminar "+self.__foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
+                self.__Answer(["0","1"])
+                if self.__answer == "0":
                     return
-                elif answer1 == "1":
-                    files.DeletePlaylist(_format,foundPlaylist)
-                    print("Se ha eliminado " + foundPlaylist +".")
+                elif self.__answer == "1":
+                    files.DeletePlaylist(_format,foundPlaylist) # funcion que elimine playlist
+                    print("Se ha eliminado " + self.__foundPlaylist +".")
                     return
-            elif toDo == "buscar":
-                PlaylistMenu(_format, foundPlaylist)
+            elif self.__toDo == "buscar":
+                self.__playlist = PlaylistMenuFile(self.__format,self.__foundPlaylist) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist.PlaylistMenu() #llama al método PlaylistMenu de ese objeto
                 return
         else:
             print("Listas encontradas:\n")
-            for foundPlaylistIndex in range(len(results)):
-                print(str(foundPlaylistIndex+1)+"\t|\t"+results[foundPlaylistIndex])
-            foundPlaylist = results[SelectListElement(len(results))]
-            if toDo == "eliminar":
-                print("¿Desea eliminar "+foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
-                answer1 = Answer(["0","1"])
-                if answer1 == "0":
+            for foundPlaylistIndex in range(len(self.__results)):
+                print(str(foundPlaylistIndex+1)+"\t|\t"+self.__results[foundPlaylistIndex])
+            self.__foundPlaylist = self.__results[self.__SelectListElement(len(self.__results))]
+            if self.__toDo == "eliminar":
+                print("¿Desea eliminar "+self.__foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
+                self.__Answer(["0","1"])
+                if self.__answer == "0":
                     return
-                elif answer1 == "1":
-                    files.DeletePlaylist(_format,foundPlaylist)
-                    print("Se ha eliminado " + foundPlaylist +".")
+                elif self.__answer == "1":
+                    files.DeletePlaylist(_format,foundPlaylist) #funcion que elimine playlist
+                    print("Se ha eliminado " + self.__foundPlaylist +".")
                     return
-            elif toDo == "buscar":
-                PlaylistMenu(_format, foundPlaylist)
+                elif self.__toDo == "buscar":
+                self.__playlist = PlaylistMenuFile(self.__format,self.__foundPlaylist) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist.PlaylistMenu() #llama al método PlaylistMenu de ese objeto
                 return
 
-    def NewPlaylistMenu(_format):
+    def __NewPlaylistMenu(self): #ya esta pasada a objetos. Solo faltan algunas funciones de juan
         print("\n===================0===================\n")
         print("\tCREAR LISTA DE REPRODUCCIÓN\n")
-        playlistName = input("Nombre de la lista de reproducción: ")
-        files.MakePlaylist(_format,playlistName)
+        self.__playlistName = input("Nombre de la lista de reproducción: ")
+        files.MakePlaylist(_format,playlistName) #función que cree una playlist por archivo
         print("La lista de reproducción ha sido creada.\n\n¿Desea añadir elementos a la lista?\n1. Aceptar.\n0. Cancelar.\n")
-        answer = Answer(["0","1"])
-        if answer == "0":
+        self.__Answer(["0","1"])
+        if self.__answer == "0":
             return
         else:
-            adding = True
-            while adding == True:
-                AddPlaylistElement(_format, playlistName)
+            self.__adding = True
+            while self.__adding == True:
+                self.__playlist = PlaylistMenuFile(self.__format,self.playlistName) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist.AddPlaylistElement()
                 print("¿Desea añadir otro elemento a la lista?\n1. Aceptar.\n0. Cancelar.\n")
-                answer1 = Answer(["0","1"])
-                if answer1 == "0":
-                    adding = False
+                self.__Answer(["0","1"])
+                if self.__answer == "0":
+                    self.__adding = False
