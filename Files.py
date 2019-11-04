@@ -88,7 +88,7 @@ class Lists:
         """
         self.__item = item
         self.__itemsFound = set()
-        for object in self.list: #NOTA: Cambiar .property por getters y setters
+        for object in self.list: 
             if self.__item in object.getName():
                 self.__itemsFound.add(object)
             elif self.__item in object.getAuthor():
