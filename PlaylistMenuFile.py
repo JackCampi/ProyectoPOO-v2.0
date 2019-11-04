@@ -46,8 +46,8 @@ class PlaylistMenu(MenuManagement):
         self.__mainList = MainList(self.__format)
         self.__results = self.__mainList.Search(self.__element)
         if len(self.__results) == 0:
-    		option = NotFoundMenu(_format, "mi" + self.__MenuFormat(False))#esperar a cambiar NotFoundMenu
-    		if option == "0":
+    		self.__option = self.__NotFoundMenu("mi" + self.__MenuFormat(False))
+    		if self.__option == "0":
     			return
     		else:
     			self.__AddPlaylistElement()
@@ -63,8 +63,7 @@ class PlaylistMenu(MenuManagement):
     			return
     		else:
                 self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
-                #cambiar .name por getter
-    			print("Se añadió \""+ self.__finalElement.name + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+    			print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
         else:
             #añadir in PrintListHead
             #añardir un PrintList con los resultados
@@ -79,8 +78,7 @@ class PlaylistMenu(MenuManagement):
     			return
     		else:
     			self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
-                #cambiar .name por getter
-    			print("Se añadió \""+ self.__finalElement.name + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+    			print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
 
 
 	"""Esta función se encarga de buscar un elemento del formato que se está
@@ -106,8 +104,8 @@ class PlaylistMenu(MenuManagement):
     	self.__element = input("¿Qué elemento desea eliminar? ")
     	self.__results = self.__playlist.Search(self.__element)
         if len(self.__results) == 0:
-    		option = NotFoundMenu(_format, playlistName)#cambiar cuando cambien NotFoundMenu
-    		if option == "0":
+    		self.__option = self.__NotFoundMenu(self.__playlistName)
+    		if self.__option == "0":
     			return
     		else:
     			self.__DeletePlaylistElement()

@@ -33,8 +33,9 @@ class MenuManagement:
     def __AddElementMenu(self):
         print("\n===================0===================\n")
         print("\tAÑADIR A MI"+ self.__MenuFormat(False).upper() +"\n")
-        newElementStr = self.__TakeElementInfo()
-        files.AddEntry(newElementStr,self.__format) #Modificar
+        self.__newElement = self.__TakeElementInfo()
+        self.__mainList = MainList(self.__format)
+        self.__mainList.AddEntry(self.__newElement)# mirar que es param Entry
         print("\nEl elemento se ha añadido a \"mi{0}\".".format(self.__MenuFormat(False)))
 
     def __TakeElementInfo(self):
@@ -106,11 +107,12 @@ class MenuManagement:
         wait = input("Pulse Enter para continuar...")
         return
 
-    def NotFoundMenu(_format, listName ):
-        print("No se encontró ningún elemento en " + listName +".\n")
+    def __NotFoundMenu(self, listName):
+        self.__listName = listName
+        print("No se encontró ningún elemento en " + self.__listName +".\n")
         print("1. Volver a buscar.\n0. Atrás.\n")
-        answer = Answer(["0","1"])
-        return answer
+        self.__Answer(["0","1"])
+        return self.__answer
 
     def PrintList(_format,_list):
         PrintListHead(_format)
