@@ -1,7 +1,7 @@
-from Files import Playlist
-from Files import MainList
 import os
-import Format
+from module_files.Files import Playlist
+from module_files.Files import MainList
+from module_files import Format
 
 class MenuManagement:
 

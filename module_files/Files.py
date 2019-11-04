@@ -124,7 +124,7 @@ class Lists:
         return sorted(self.__itemsFoundList, key = lambda object : object.getName())
 
 
-class Mainlist(Lists):
+class MainList(Lists):
     def __init__(self, _format, name="Main_list.txt"):
         """
         Recibe el formato y el nombre de una lista, este nuevo objeto tiene las siguientes propiedades:
@@ -191,9 +191,3 @@ class PlaylistList:
             if self.__playlistName in item:
                 self.__itemsFoundList.append(item)
         return sorted(self.__itemsFoundList)
-
-
-# PRUEBAS
-main = Mainlist("music")
-b = Playlist("music", "b.txt")
-
