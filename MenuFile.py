@@ -114,6 +114,27 @@ class MenuManagement:
         answer = Answer(["0","1"])
         return answer
 
+    def PrintList(_format,_list):
+        PrintListHead(_format)
+        for dicIndex in range(len(_list)):
+            PrintListElement(_list , dicIndex)
+
+    def PrintListElement(_list,dicIndex = 0):
+        toPrint = "{0}.\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\t|\t{5}\n"
+        print(toPrint.format(dicIndex+1,_list[dicIndex]["name"],_list[dicIndex]["author"],_list[dicIndex]["album"],_list[dicIndex]["year"],_list[dicIndex]["type"]))
+        return
+
+    def PrintListHead(_format):
+        if _format == "music":
+            print("No.\t|\tNombre\t|\tArtista\t|\tÁlbum\t|\tAño\t|\tGénero\n")
+        else:
+            print("No.\t|\tNombre\t|\tProtagonista\t|\tÁlbum\t|\tAño\t|\tTipo\n")
+        return
+
+    def SelectListElement(listLength):
+        print("\n¿Cuál desea seleccionar? ")
+        selectElement = Answer([str(x) for x in range(1,listLength+1)])
+        return int(selectElement) - 1
 
 
 
