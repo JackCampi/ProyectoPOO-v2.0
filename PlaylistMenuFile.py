@@ -15,12 +15,12 @@ class PlaylistMenu(MenuManagement):
         if answer == "0":
     		return
     	elif self.__answer == "1":
-    		self.PrintPlaylist()
+    		self.__PrintPlaylist()
     		wait = input("Pulse Enter para continuar...")
     		self.PlaylistMenu()
     		return
     	elif self.__answer == "2":
-    		self.__AddPlaylistElement()
+    		self.AddPlaylistElement()
     		self.PlaylistMenu()
     		return
     	elif self.__answer == "3":
@@ -41,7 +41,7 @@ class PlaylistMenu(MenuManagement):
 	- La cuarta opción elimina la lista de reproducción y retorna al cuarto menú."""
 
 
-    def __AddPlaylistElement(self):
+    def AddPlaylistElement(self):
         self.__element = input("¿Qué elemento desea agregar a la lista? ")
         self.__mainList = MainList(self.__format)
         self.__results = self.__mainList.Search(self.__element)
@@ -50,7 +50,7 @@ class PlaylistMenu(MenuManagement):
     		if self.__option == "0":
     			return
     		else:
-    			self.__AddPlaylistElement()
+    			self.AddPlaylistElement()
         elif len(self.__results) == 1:
             self.__finalElement = self.__results[0]
             self.__PrintListHead()
@@ -86,7 +86,7 @@ class PlaylistMenu(MenuManagement):
 	- Como argumentos recibe el formato sobre el que se está trabajando y el
 	nombre de la lista de reproducción a la cual se le va a añadir el elemento.
 	- Al terminar, vuelve al menú específico de la lista."""
-    def PrintPlaylist(self):
+    def __PrintPlaylist(self):
         self.__SortListMenu(self.__playlist, self.__playListName)
  	   return
 	       """Esta función construye la ruta de la lista de reproducción para pasarla
@@ -141,30 +141,3 @@ class PlaylistMenu(MenuManagement):
 	usuario de volver a buscar o salir.
 	- Antes de eliminar un elemento le pide al usuario confirmar la acción.
 	- Al terminar, vuelve al menú específico de la lista."""
-    def NewPlaylistMenu(self):
-        print("\n===================0===================\n")
-    	print("\tCREAR LISTA DE REPRODUCCIÓN\n")
-
-	"""Esta función se encarga de crear una nueva lista de reproducción y de
-	agregar elementos a esta.
-	- Como parametro recibe el formato sobre el que se está trabajando.
-	- Contiene un bucle que termina cuando el usuario deja de añadir elementos
-	a la lista.
-	- Al terminar, vuelve al cuarto menú."""
-
-	print("\n===================0===================\n")
-	print("\tCREAR LISTA DE REPRODUCCIÓN\n")
-	playlistName = input("Nombre de la lista de reproducción: ")
-	files.MakePlaylist(_format, playlistName)
-	print("La lista de reproducción ha sido creada.\n\n¿Desea añadir elementos a la lista?\n1. Aceptar.\n0. Cancelar.\n")
-	answer = Answer(["0", "1"])
-	if answer == "0":
-		return
-	else:
-		adding = True
-		while adding == True:
-			AddPlaylistElement(_format, playlistName)
-			print("¿Desea añadir otro elemento a la lista?\n1. Aceptar.\n0. Cancelar.\n")
-			answer1 = Answer(["0", "1"])
-			if answer1 == "0":
-				adding = False
