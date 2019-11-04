@@ -1,5 +1,5 @@
-import Playlist from Files
-import MainList from Files
+from Files import Playlist
+from Files import MainList
 import os
 import Format
 
@@ -153,7 +153,7 @@ class MenuManagement:
 
 
 
-class PincipalMenu (MenuManagement):
+class PrincipalMenu (MenuManagement):
 
     def MainMenu(self):
         print("\n===================0===================\n")
