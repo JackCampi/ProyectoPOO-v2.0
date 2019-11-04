@@ -24,7 +24,7 @@ class PlaylistMenu(MenuManagement):
     		self.PlaylistMenu()
     		return
     	elif self.__answer == "3":
-    		self.DeletePlaylistElement(self.__format, self.__playlistName)
+    		self.__DeletePlaylistElement()
     		self.PlaylistMenu()
     		return
     	elif self.__answer == "4":
@@ -68,7 +68,7 @@ class PlaylistMenu(MenuManagement):
         else:
             #añadir in PrintListHead
             #añardir un PrintList con los resultados
-    		self.__finalElement = results[SelectListElement(len(results))]#cuando cambien SelectListElement
+    		self.__finalElement = self.__results[SelectListElement(len(results))]#cuando cambien SelectListElement
     		PrintListHead(_format)#cuando cambien PrintListHead
             #mirar como se llaman las propiedades de los objetos, se puede cambiar por un PrintListElement
     		print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(finalElement["name"],finalElement["author"],finalElement["album"],finalElement["year"],finalElement["type"]))
@@ -102,7 +102,43 @@ class PlaylistMenu(MenuManagement):
 	   SortListMenu(_format, playlistName, playlistPath)
 	   return
 
-    def DeletePlaylistElement(_format, playlistName):
+    def __DeletePlaylistElement(self):
+    	self.__element = input("¿Qué elemento desea eliminar? ")
+    	self.__results = self.__playlist.Search(self.__element)
+        if len(self.__results) == 0:
+    		option = NotFoundMenu(_format, playlistName)#cambiar cuando cambien NotFoundMenu
+    		if option == "0":
+    			return
+    		else:
+    			self.__DeletePlaylistElement()
+        elif len(self.__results) == 1:
+    		self.__finalElement = self.__results[0]
+    		PrintListHead(_format) #mirar como funciona esta funcion/esperar a que la cambien
+            #mirar como se llaman las propiedades de los objetos, se puede cambiar por un PrintListElement
+    		print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(finalElement["name"],finalElement["author"],finalElement["album"],finalElement["year"],finalElement["type"]))
+    		print("¿Desea eliminar este elemento de " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+    		self.__Answer(["0", "1"])
+    		if self.__answer == 0:
+    			print("El elemento no se eliminó.\n")
+    			return
+    		else:
+                self.__playlist.DeleteEntry(self.__finalElement)#mirar que es param Entry
+    			print("Se eliminó el elemento de " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+        else:
+    		#añadir in PrintListHead
+            #añardir un PrintList con los resultados
+    		self.__finalElement = self.__results[SelectListElement(len(results))]#cuando cambien SelectListElement
+    		PrintListHead(_format)  #mirar como funciona esta funcion/esperar a que la cambien
+            #mirar como se llaman las propiedades de los objetos, se puede cambiar por un PrintListElement
+    		print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(finalElement["name"],finalElement["author"],finalElement["album"],finalElement["year"],finalElement["type"]))
+    		print("¿Desea eliminar este elemento de " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+    		self.__Answer(["0", "1"])
+    		if self.__answer == 0:
+    			print("El elemento no se eliminó.\n")
+    			return
+    		else:
+    			self.__playlist.DeleteEntry(self.__finalElement)#mirar que es param Entry
+    			print("Se eliminó el elemento de " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
 
 	"""Esta función se encarga de buscar un elemento en la lista de reproducción
 	para eliminarlo.
@@ -112,38 +148,30 @@ class PlaylistMenu(MenuManagement):
 	usuario de volver a buscar o salir.
 	- Antes de eliminar un elemento le pide al usuario confirmar la acción.
 	- Al terminar, vuelve al menú específico de la lista."""
+    def NewPlaylistMenu(self):
+        print("\n===================0===================\n")
+    	print("\tCREAR LISTA DE REPRODUCCIÓN\n")
 
-	playlistPath = "playlists" + os.sep + playlistName + ".txt"
-	playlistList = files.ReadFormat(_format, playlistPath)
-	element = input("¿Qué elemento desea eliminar? ")
-	results = Miscellaneous.SearchItemInList(playlistList, element)
-	if len(results) == 0:
-		option = NotFoundMenu(_format, playlistName)
-		if option == "0":
-			return
-		else:
-			DeletePlaylistElement(_format, playlistName)
-	elif len(results) == 1:
-		finalElement = results[0]
-		PrintListHead(_format)
-		print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(finalElement["name"],finalElement["author"],finalElement["album"],finalElement["year"],finalElement["type"]))
-		print("¿Desea eliminar este elemento de " + playlistName + "?\n1. Confirmar.\n0. Cancelar.")
-		answer = Answer(["0", "1"])
-		if answer == 0:
-			print("El elemento no se eliminó.\n")
-			return
-		else:
-			files.DeleteEntry(finalElement, _format, playlistPath)
-			print("Se eliminó el elemento de " + playlistName + ". Volviendo al menú de la lista de reproducción.")
+	"""Esta función se encarga de crear una nueva lista de reproducción y de
+	agregar elementos a esta.
+	- Como parametro recibe el formato sobre el que se está trabajando.
+	- Contiene un bucle que termina cuando el usuario deja de añadir elementos
+	a la lista.
+	- Al terminar, vuelve al cuarto menú."""
+
+	print("\n===================0===================\n")
+	print("\tCREAR LISTA DE REPRODUCCIÓN\n")
+	playlistName = input("Nombre de la lista de reproducción: ")
+	files.MakePlaylist(_format, playlistName)
+	print("La lista de reproducción ha sido creada.\n\n¿Desea añadir elementos a la lista?\n1. Aceptar.\n0. Cancelar.\n")
+	answer = Answer(["0", "1"])
+	if answer == "0":
+		return
 	else:
-		finalElement = results[SelectListElement(len(results))]
-		PrintListHead(_format)
-		print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(finalElement["name"],finalElement["author"],finalElement["album"],finalElement["year"],finalElement["type"]))
-		print("¿Desea eliminar este elemento de " + playlistName + "?\n1. Confirmar.\n0. Cancelar.")
-		answer = Answer(["0", "1"])
-		if answer == 0:
-			print("El elemento no se eliminó.\n")
-			return
-		else:
-			files.DeleteEntry(finalElement, _format, playlistPath)
-			print("Se eliminó el elemento de " + playlistName + ". Volviendo al menú de la lista de reproducción.")
+		adding = True
+		while adding == True:
+			AddPlaylistElement(_format, playlistName)
+			print("¿Desea añadir otro elemento a la lista?\n1. Aceptar.\n0. Cancelar.\n")
+			answer1 = Answer(["0", "1"])
+			if answer1 == "0":
+				adding = False
