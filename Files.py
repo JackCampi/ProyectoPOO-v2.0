@@ -70,16 +70,16 @@ class Lists:
         RETURN: lista ordenada de objetos
         """
         self.__key = key
-        if self.__key == "name": #NOTA: Cambiar .property por getters y setters
-            return sorted(self.list, key = lambda object : object.name)
+        if self.__key == "name":
+            return sorted(self.list, key = lambda object : object.getName())
         elif self.__key == "author":
-            return sorted(self.list, key = lambda object : object.author)
+            return sorted(self.list, key = lambda object : object.getAuthor())
         elif self.__key == "album":
-            return sorted(self.list, key = lambda object : object.album)
+            return sorted(self.list, key = lambda object : object.getAlbum())
         elif self.__key == "year":
-            return sorted(self.list, key = lambda object : object.year)
+            return sorted(self.list, key = lambda object : object.getYear())
         elif self.__key == "type":
-            return sorted(self.list, key = lambda object : object.type)
+            return sorted(self.list, key = lambda object : object.getType())
     def Search(self, item):
         """
         función que recibe como parametro un item a buscar, busca en todas sus propiedades
@@ -89,18 +89,18 @@ class Lists:
         self.__item = item
         self.__itemsFound = set()
         for object in self.list: #NOTA: Cambiar .property por getters y setters
-            if self.__item in object.name:
+            if self.__item in object.getName():
                 self.__itemsFound.add(object)
-            elif self.__item in object.author:
+            elif self.__item in object.getAuthor():
                 self.__itemsFound.add(object)
-            elif self.__item in object.album:
+            elif self.__item in object.getAlbum():
                 self.__itemsFound.add(object)
-            elif self.__item in object.year:
+            elif self.__item in object.getYear():
                 self.__itemsFound.add(object)
-            elif self.__item in object.type:
+            elif self.__item in object.getType():
                 self.__itemsFound.add(object)
         self.__itemsFoundList = list(self.__itemsFound)
-        return sorted(self.__itemsFoundList, key = lambda object : object.name)
+        return sorted(self.__itemsFoundList, key = lambda object : object.getName())
 
 class Mainlist(Lists):
     def __init__(self, _format, name="Main_list.txt"):
