@@ -1,64 +1,7 @@
 """Módulo Files, maneja todo lo relacionado con los archivos y la
     representación interna de los elementos"""
 import os
-
-
-class Entry:
-    def __init__(self, string):
-        """
-        Crea un objeto del tipo entrada con las siguientes características:
-        order: tupla que indica el orden de la entrada.
-        entry: diccionario que contiene la información organizada.
-
-        :param string: La cadena que contiene la información de la nueva entrada,
-              tiene que estar en el siguiente orden "nombre, autor, album,
-              año, género". Además tiene que estar separada por el caracter "¬".
-        """
-        self.order = ("name", "author", "album", "year", "type", "path")
-        elements = string.strip("\n").split("¬")
-        self.entry = {}
-        assert len(elements) == len(self.order), "Entrada inválida"
-        for i in range(len(self.order)):
-            self.entry[self.order[i]] = elements[i]
-
-    def ToString(self):
-        """
-        Devuelve la representación de string de la entrada.
-
-        :return: Una lista separada por el caracter ¬, que contiene la información de una
-        entrada en el siguiente orden "nombre, autor, album, año, género, ubicación."
-        """
-        ans = ""
-        for i in self.entry:
-            ans += str(self.entry[i])
-            ans += "¬"
-        return ans[:-1]
-
-    def __str__(self):
-        # Esto es para encontrar errores con facilidad
-        return str(self.entry)
-
-
-class Format:
-    def __init__(self, _format):
-        """
-        Crea un objeto del tipo Format.
-        :param _format: El formato de la lista, puede ser "music", "pictures", o "videos."
-        """
-        self.format = _format
-
-    def GetPlaylists(self):
-        """
-        :return: Lista con los nombres de las playlist del formato.
-        """
-        root = self.format
-        path = root + os.sep + "playlists"
-        ans = []
-        for root, directory, files in os.walk(path):
-            for file in files:
-                if file.endswith(".txt"):
-                    ans.append(file[:-4])
-        return ans
+import Format
 
 
 class Lists:
@@ -71,25 +14,17 @@ class Lists:
         :param _format: El formato de la lista, puede ser "music", "pictures", o "videos."
         :param name: El nombre del archivo de la lista, por defecto es "Main_list.txt
         """
-        root = _format
-        self.path = root + os.sep + name
-        fileHandler = open(self.path, "r")
+        self.format = _format
+        self.name = name
+        self.path = self.format + os.sep + self.name
         self.list = []
-        for line in fileHandler:
-            entry = Entry(line)
-            self.list.append(entry)
-        fileHandler.close()
+        self.length = 0
 
-    def UpdateList(self):
+    def Update(self):
         """
         Actualiza la lista de entradas.
         """
-        fileHandler = open(self.path, "r")
-        self.list = []
-        for line in fileHandler:
-            entry = Entry(line)
-            self.list.append(entry)
-        fileHandler.close()
+        self.length = len(self.list)
 
     def WriteList(self):
         """
@@ -99,6 +34,7 @@ class Lists:
         for i in self.list:
             fileHandler.write(i.ToString() + "\n")
         fileHandler.close()
+        self.Update()
 
     def AddEntry(self, newEntry):
         """
@@ -107,7 +43,6 @@ class Lists:
         :param newEntry: Entrada que será agregada (ver clase Entry).
         """
         self.list.append(newEntry)
-        self.list.sort(key=lambda entr: entr.entry["name"])
         self.WriteList()
 
     def DeleteEntry(self, entry):
@@ -116,12 +51,8 @@ class Lists:
 
         :param entry: Entrada que será eliminada (ver clase Entry).
         """
-        fileHandler = open(self.path, "w")
-        for i in self.list:
-            if i != entry:
-                fileHandler.write(i.ToString() + "\n")
-        fileHandler.close()
-        self.UpdateList()
+        self.list.remove(entry)
+        self.WriteList()
 
     def ModifyList(self, newEntry, oldEntry):
         """
@@ -134,6 +65,36 @@ class Lists:
         self.AddEntry(newEntry)
 
 
+class Mainlist(Lists):
+    def __init__(self, _format, name="Main_list.txt"):
+        """
+        Recibe el formato y el nombre de una lista, este nuevo objeto tiene las siguientes propiedades:
+        path: La ubicación de la lista.
+        list: La lista de entradas (ver clase Entry)
+
+        :param _format: El formato de la lista, puede ser "music", "pictures", o "videos."
+        :param name: El nombre del archivo de la lista, por defecto es "Main_list.txt
+        """
+        super().__init__(_format, name)
+        fileHandler = open(self.path, "r")
+        self.list = []
+        constructor = None
+        if _format == "music":  # Escoger el constructor adecuado
+            constructor = Format.Music
+        elif _format == "videos":
+            constructor = Format.Videos
+        elif _format == "pictures":
+            constructor = Format.Pictures
+
+        for line in fileHandler:
+            name, author, album, year, _type, path = line.split("¬")
+            entry = constructor(name, author, album, year, _type, path)
+            self.list.append(entry)
+
+        self.length = len(self.list)
+        fileHandler.close()
+
+
 class Playlist(Lists):
     def __init__(self, _format, name):
         """
@@ -144,9 +105,8 @@ class Playlist(Lists):
         :param _format: El formato de la lista, puede ser "music", "pictures", o "videos."
         :param name: El nombre del archivo de la lista de reproducción.
         """
-        root = _format
-        self.path = root + os.sep + "playlists" + os.sep + name + ".txt"
-        self.list = []
+        super().__init__(_format, name)
+        self.path = _format + os.sep + "playlists" + os.sep + name
         fileHandler = open(self.path, "w")
         fileHandler.close()
 
@@ -157,12 +117,20 @@ class Playlist(Lists):
         os.remove(self.path)
 
 
+class PlaylistList:
+    """
+    Clase para sacar la lista de listas de reproducción.
+    """
+    def __init__(self, _format):
+        path = _format + os.sep + "playlists"
+        self.__playlists = []
+        for root, directory, files in os.walk(path):
+            for file in files:
+                if file.endswith(".txt"):
+                    self.__playlists.append(file[:-4])
+
+    def GetPlaylists(self):
+        return self.__playlists.copy()
+
+
 # PRUEBAS
-
-l = Lists("music")
-n = Entry("abd¬agh¬tre¬ojk¬ear¬jhg")
-n2 = Entry("ogf¬agh¬tre¬ojk¬ear¬jhg")
-n3 = Entry("0fg¬agh¬tre¬ojk¬ear¬jhg")
-
-pl = Playlist("music", "hola")
-
