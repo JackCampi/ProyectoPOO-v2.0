@@ -55,9 +55,9 @@ class PlaylistMenu(MenuManagement):
             self.__finalElement = self.__results[0]
             self.__PrintListHead()
             self.__PrintListElement(self.__results)
-    		print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
-    		self.__Answer(["0", "1"])
-    		if self.__answer == 0:
+            print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+            self.__Answer(["0", "1"])
+            if self.__answer == 0:
     			print("No se añadió el elemento.\n")
     			return
             else:
