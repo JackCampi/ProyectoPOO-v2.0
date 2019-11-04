@@ -1,4 +1,6 @@
 #MenuFile
+import Files
+import PlaylistMenuFile
 class MenuManagement:
 
     def __init__(self):
@@ -32,8 +34,9 @@ class MenuManagement:
     def __AddElementMenu(self):
         print("\n===================0===================\n")
         print("\tAÑADIR A MI"+ self.__MenuFormat(False).upper() +"\n")
-        newElementStr = self.__TakeElementInfo()
-        files.AddEntry(newElementStr,self.__format) #Modificar
+        self.__newElement = self.__TakeElementInfo()
+        self.__mainList = MainList(self.__format)
+        self.__mainList.AddEntry(self.__newElement)# mirar que es param Entry
         print("\nEl elemento se ha añadido a \"mi{0}\".".format(self.__MenuFormat(False)))
 
     def __TakeElementInfo(self):
@@ -46,54 +49,51 @@ class MenuManagement:
         info = "¬".join([name, author, album, year, type, path])
         return info
 
-    def __SortListMenu(self, listObject):
+    def __SortListMenu(self, objectList, listName):
+        self.__listName = listName
+        self.__objectList = objectList #objeto de la clase Lists
         print("\n===================0===================\n")
-        print("\tVER "+ listName.upper() +"\n") #LISTNAME
+        print("\tVER "+ self.__listName.upper() +"\n")
         print(self.__SortListMenuOptions())
         self.__Answer(["0","1","2","3","4","5"])
         if self.__answer == "0":
             return
         elif self.__answer == "1":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"name")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("name")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
-                wait = input("Pulse Enter para continuar...")
+                self.__PrintList(self.__sortedList)
+                self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "2":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"author")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("author")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
-                wait = input("Pulse Enter para continuar...")
+                self.__PrintList(self.__sortedList)
+                self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "3":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"album")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("album")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
-                wait = input("Pulse Enter para continuar...")
+                self.__PrintList(self.__sortedList)
+                self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "4":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"year")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("year")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
-                wait = input("Pulse Enter para continuar...")
+                self.__PrintList(self.__sortedList)
+                self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "5":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"type")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("type")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
-                wait = input("Pulse Enter para continuar...")
-            SortListMenu(_format, listName)
+                self.__PrintList(self.__sortedList)
+                self.__wait = input("Pulse Enter para continuar...")
+        self.__SortListMenu(self.__objectList, self.__listName)
 
     def __SortListMenuOptions(self):
 	if self.__format == "music":
@@ -101,40 +101,56 @@ class MenuManagement:
 	else:
 		return "1. Por nombre.\n2. Por protagonista.\n3. Por álbum.\n4. Por año.\n5. Por tipo.\n\n0. Atrás.\n"
 
-    def __emptyListMenu(self, listName):
+    def __emptyListMenu(self):
         print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-        print("No hay elementos en "+listName+".")
+        print("No hay elementos en "+ self.__listName +".")
         print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
         wait = input("Pulse Enter para continuar...")
         return
 
-    def NotFoundMenu(_format, listName ):
-        print("No se encontró ningún elemento en " + listName +".\n")
+    def __NotFoundMenu(self, listName):
+        self.__listName = listName
+        print("No se encontró ningún elemento en " + self.__listName +".\n")
         print("1. Volver a buscar.\n0. Atrás.\n")
         self.__Answer(["0","1"])
+<<<<<<< HEAD
+        return
+=======
+        return self.__answer
+>>>>>>> 49c6e30da3f0010e1fbbfaefa93eac70c355c8fb
+
+    def __PrintList(self, _list):
+        self.__list = _list
+        self.__PrintListHead()
+        for dicIndex in range(len(self.__list)):
+            self.__PrintListElement(self.__list , dicIndex)
+
+    def __PrintListElement(self, _list,dicIndex = 0):
+        self.__list = _list
+        self.__index = dicIndex
+        self.__toPrint = "{0}.\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\t|\t{5}\n"
+        self.__item = self.__list[self.__index]
+        print(self.__toPrint.format(self.__index+1,self.__item.getName(),self.__item.getAuthor()
+                                    ,self.__item.getAlbum(),self.__item.getYear(),self.__item.getType()))
         return
 
-    def PrintList(_format,_list):
-        PrintListHead(_format)
-        for dicIndex in range(len(_list)):
-            PrintListElement(_list , dicIndex)
-
-    def PrintListElement(_list,dicIndex = 0):
-        toPrint = "{0}.\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\t|\t{5}\n"
-        print(toPrint.format(dicIndex+1,_list[dicIndex]["name"],_list[dicIndex]["author"],_list[dicIndex]["album"],_list[dicIndex]["year"],_list[dicIndex]["type"]))
-        return
-
-    def PrintListHead(_format):
-        if _format == "music":
+    def __PrintListHead(self):
+        if self.__format == "music":
             print("No.\t|\tNombre\t|\tArtista\t|\tÁlbum\t|\tAño\t|\tGénero\n")
         else:
             print("No.\t|\tNombre\t|\tProtagonista\t|\tÁlbum\t|\tAño\t|\tTipo\n")
         return
 
-    def SelectListElement(listLength):
+    def __SelectListElement(self, listLength):
+        self.__listLength = listLength
         print("\n¿Cuál desea seleccionar? ")
+<<<<<<< HEAD
         self.__Answer([str(x) for x in range(1,listLength+1)])
         return int(self.__answer) - 1
+=======
+        self.__selectElement = self.__Answer([str(x) for x in range(1,self.__listLength+1)])
+        return int(self.__selectElement) - 1
+>>>>>>> 49c6e30da3f0010e1fbbfaefa93eac70c355c8fb
 
 
 
@@ -229,18 +245,26 @@ class PincipalMenu (MenuManagement):
             ModifyElementMenu(_format,foundElement)
             return
 
+<<<<<<< HEAD
     def AddToPlaylistMenu(_format, toAddElement):
         playlistList = files.GetPlaylists(_format)
         if len(playlistList) == 0:
+=======
+    def __AddToPlaylistMenu(self, toAddElement): #ya esta corregido a objetos
+        self.__playlists = PlaylistList(self.__format) #objeto tipo PlaylistList
+        self.__playlistList = self.__playlists.GetPlaylists()
+        self.__toAddElement = toAddElement
+        if len(self.__playlistList) == 0:
+>>>>>>> 49c6e30da3f0010e1fbbfaefa93eac70c355c8fb
             print("No se encontraron listas de reproducción en "+ self.__MenuFormat()+".")
             return
         else:
-            for playlistIndex in range(len(playlistList)):
-                print(str(playlistIndex+1)+"\t|\t"+ playlistList[playlistIndex] )
-            playlistName = playlistList[SelectListElement(len(playlistList))]
-            playlistPath = "playlists"+ os.sep + playlistName + ".txt"
-            files.AddEntry(toAddElement ,_format , playlistPath)
-            print("Se añadió \""+toAddElement["name"]+ "\" a " + playlistName + ".")
+            for playlistIndex in range(len(self.__playlistList)):
+                print(str(playlistIndex+1)+"\t|\t"+ self.__playlistList[playlistIndex] )
+            self.__playlistName = self.__playlistList[self.__SelectListElement(len(self.__playlistList))]
+            self.__playlistObject = Playlist(self.__format, self.__playlistName) #objeto de tipo Playlist
+            self.__playlistObject.AddEntry(self.__toAddElement) #mirar ques es param Entry
+            print("Se añadió \""+self.__toAddElement.getName()+ "\" a " + self.__playlistName + ".")
             return
 
     def ModifyElementMenu(_format, oldElementDic):
@@ -272,18 +296,20 @@ class PincipalMenu (MenuManagement):
                         playlistName = playlists[SelectListElement(len(playlists))]
                         PlaylistMenu(_format, playlistName)
         elif self.__answer == "2":
-            NewPlaylistMenu(_format) #falta pasar
+            NewPlaylistMenu(_format) #falta pasar --> ya esta // corregir llamadas a esta función
         elif self.__answer == "3":
-            SearchPlaylistMenu(_format) #falta pasar
+            SearchPlaylistMenu(_format) #falta pasar --> ya esta // corregir llamadas a esta función
         elif self.__answer == "4":
-            SearchPlaylistMenu(_format,"eliminar") #faltapasar
+            SearchPlaylistMenu(_format,"eliminar") #faltapasar --> ya esta // corregir llamadas a esta función
         self.__FourthMenu(_format)
 
-    def SearchPlaylistMenu(_format, toDo = "buscar"):
+    def __SearchPlaylistMenu(self, toDo = "buscar"): #ya esta pasada a objetos //si quieres mirar instanciacion de objetos
+        self.__toDo = toDo
         print("\n===================0===================\n")
-        toSearch = input("¿Qué lista de reproducción desea "+ toDo +"? ")
-        results = Miscellaneous.SearchItemInList(files.GetPlaylists(_format),toSearch)
-        if len(results) == 0:
+        self.__toSearch = input("¿Qué lista de reproducción desea "+ self.__toDo +"? ")
+        self.__playlists = PlaylistList(self.__format) #objeto tipo PlaylistList
+        self.__results = self.__playlists.SearchPlaylist(self.__toSearch)
+        if len(self.__results) == 0:
             print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
             print("No se encontró ninguna lista de reproducción en " + self.__MenuFormat() +".\n")
             print("1. Volver a buscar.\n0. Atrás.\n")
@@ -291,53 +317,88 @@ class PincipalMenu (MenuManagement):
             if self.__answer == "0":
                 return
             elif self.__answer == "1":
+<<<<<<< HEAD
                 SearchPlaylistMenu(_format, toDo )
         elif len(results) == 1:
             foundPlaylist = results[0]
             if toDo == "eliminar":
                 print("¿Desea eliminar "+foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
+=======
+                self.__SearchPlaylistMenu(self.__toDo )
+        elif len(self.__results) == 1:
+            self.__foundPlaylist = self.__results[0]
+            if self.__toDo == "eliminar":
+                print("¿Desea eliminar "+self.__foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
+>>>>>>> 49c6e30da3f0010e1fbbfaefa93eac70c355c8fb
                 self.__Answer(["0","1"])
                 if self.__answer == "0":
                     return
                 elif self.__answer == "1":
+<<<<<<< HEAD
                     files.DeletePlaylist(_format,foundPlaylist)
                     print("Se ha eliminado " + foundPlaylist +".")
+=======
+                    files.DeletePlaylist(_format,foundPlaylist) # funcion que elimine playlist
+                    print("Se ha eliminado " + self.__foundPlaylist +".")
+>>>>>>> 49c6e30da3f0010e1fbbfaefa93eac70c355c8fb
                     return
-            elif toDo == "buscar":
-                PlaylistMenu(_format, foundPlaylist)
+            elif self.__toDo == "buscar":
+                self.__playlist = PlaylistMenuFile(self.__format,self.__foundPlaylist) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist.PlaylistMenu() #llama al método PlaylistMenu de ese objeto
                 return
         else:
             print("Listas encontradas:\n")
+<<<<<<< HEAD
             for foundPlaylistIndex in range(len(results)):
                 print(str(foundPlaylistIndex+1)+"\t|\t"+results[foundPlaylistIndex])
             foundPlaylist = results[SelectListElement(len(results))]
             if toDo == "eliminar":
                 print("¿Desea eliminar "+foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
+=======
+            for foundPlaylistIndex in range(len(self.__results)):
+                print(str(foundPlaylistIndex+1)+"\t|\t"+self.__results[foundPlaylistIndex])
+            self.__foundPlaylist = self.__results[self.__SelectListElement(len(self.__results))]
+            if self.__toDo == "eliminar":
+                print("¿Desea eliminar "+self.__foundPlaylist+"?\n1. Aceptar.\n0. Cancelar.")
+>>>>>>> 49c6e30da3f0010e1fbbfaefa93eac70c355c8fb
                 self.__Answer(["0","1"])
                 if self.__answer == "0":
                     return
                 elif self.__answer == "1":
+<<<<<<< HEAD
                     files.DeletePlaylist(_format,foundPlaylist)
                     print("Se ha eliminado " + foundPlaylist +".")
+=======
+                    files.DeletePlaylist(_format,foundPlaylist) #funcion que elimine playlist
+                    print("Se ha eliminado " + self.__foundPlaylist +".")
+>>>>>>> 49c6e30da3f0010e1fbbfaefa93eac70c355c8fb
                     return
-            elif toDo == "buscar":
-                PlaylistMenu(_format, foundPlaylist)
+                elif self.__toDo == "buscar":
+                self.__playlist = PlaylistMenuFile(self.__format,self.__foundPlaylist) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist.PlaylistMenu() #llama al método PlaylistMenu de ese objeto
                 return
 
-    def NewPlaylistMenu(_format):
+    def __NewPlaylistMenu(self): #ya esta pasada a objetos. Solo faltan algunas funciones de juan
         print("\n===================0===================\n")
         print("\tCREAR LISTA DE REPRODUCCIÓN\n")
-        playlistName = input("Nombre de la lista de reproducción: ")
-        files.MakePlaylist(_format,playlistName)
+        self.__playlistName = input("Nombre de la lista de reproducción: ")
+        files.MakePlaylist(_format,playlistName) #función que cree una playlist por archivo
         print("La lista de reproducción ha sido creada.\n\n¿Desea añadir elementos a la lista?\n1. Aceptar.\n0. Cancelar.\n")
         self.__Answer(["0","1"])
         if self.__answer == "0":
             return
         else:
-            adding = True
-            while adding == True:
-                AddPlaylistElement(_format, playlistName)
+            self.__adding = True
+            while self.__adding == True:
+                self.__playlist = PlaylistMenuFile(self.__format,self.playlistName) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist.AddPlaylistElement()
                 print("¿Desea añadir otro elemento a la lista?\n1. Aceptar.\n0. Cancelar.\n")
+<<<<<<< HEAD
                 self._Answer(["0","1"])
                 if self.__answer == "0":
                     adding = False
+=======
+                self.__Answer(["0","1"])
+                if self.__answer == "0":
+                    self.__adding = False
+>>>>>>> 49c6e30da3f0010e1fbbfaefa93eac70c355c8fb
