@@ -63,7 +63,44 @@ class Lists:
         """
         self.DeleteEntry(oldEntry)
         self.AddEntry(newEntry)
-
+    def SortList(self, key):
+        """
+        función propia de las listas que ordena la lista (MainList o playlist)
+        de acuerdo a un criterio (nombre, autor, etc...)
+        RETURN: lista ordenada de objetos
+        """
+        self.__key = key
+        if self.__key == "name": #NOTA: Cambiar .property por getters y setters
+            return sorted(self.list, key = lambda object : object.name)
+        elif self.__key == "author":
+            return sorted(self.list, key = lambda object : object.author)
+        elif self.__key == "album":
+            return sorted(self.list, key = lambda object : object.album)
+        elif self.__key == "year":
+            return sorted(self.list, key = lambda object : object.year)
+        elif self.__key == "type":
+            return sorted(self.list, key = lambda object : object.type)
+    def Search(self, item):
+        """
+        función que recibe como parametro un item a buscar, busca en todas sus propiedades
+        y retorna una lista de coincidencias (objetos ordenados por nombre)
+        RETURN: lista de objetos ordenados por nombre
+        """
+        self.__item = item
+        self.__itemsFound = set()
+        for object in self.list: #NOTA: Cambiar .property por getters y setters
+            if self.__item in object.name:
+                self.__itemsFound.add(object)
+            elif self.__item in object.author:
+                self.__itemsFound.add(object)
+            elif self.__item in object.album:
+                self.__itemsFound.add(object)
+            elif self.__item in object.year:
+                self.__itemsFound.add(object)
+            elif self.__item in object.type:
+                self.__itemsFound.add(object)
+        self.__itemsFoundList = list(self.__itemsFound)
+        return sorted(self.__itemsFoundList, key = lambda object : object.name)
 
 class Mainlist(Lists):
     def __init__(self, _format, name="Main_list.txt"):
