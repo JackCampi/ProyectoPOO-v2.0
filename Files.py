@@ -88,7 +88,7 @@ class Lists:
         """
         self.__item = item
         self.__itemsFound = set()
-        for object in self.list: 
+        for object in self.list:
             if self.__item in object.getName():
                 self.__itemsFound.add(object)
             elif self.__item in object.getAuthor():
@@ -168,6 +168,18 @@ class PlaylistList:
 
     def GetPlaylists(self):
         return self.__playlists.copy()
+    def SearchPlaylist(self, playlistName):
+        """
+        funcion que busca un nombre de una playlist dentro de todas
+        las playlist existentes
+        RETURN: lista de coincidencias
+        """
+        self.__playlistName = playlistName
+        self.__itemsFoundList = []
+        for item in self.playlists:
+            if self.playlistName in item:
+                self.__itemsFoundList.append(item)
+        return sorted(self.__itemsFoundList)
 
 
 # PRUEBAS
