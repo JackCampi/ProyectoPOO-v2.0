@@ -19,6 +19,25 @@ class Lists:
         self.path = self.format + os.sep + self.name
         self.list = []
         self.length = 0
+        
+    def open(self):
+        fileHandler = open(self.path, "r")
+        self.list = []
+        constructor = None
+        if self.format == "music":  # Escoger el constructor adecuado
+            constructor = Format.Music
+        elif self.format == "videos":
+            constructor = Format.Videos
+        elif self.format == "pictures":
+            constructor = Format.Pictures
+
+        for line in fileHandler:
+            name, author, album, year, _type, path = line.split("¬")
+            entry = constructor(name, author, album, year, _type, path)
+            self.list.append(entry)
+
+        self.length = len(self.list)
+        fileHandler.close()
 
     def Update(self):
         """
@@ -76,23 +95,7 @@ class Mainlist(Lists):
         :param name: El nombre del archivo de la lista, por defecto es "Main_list.txt
         """
         super().__init__(_format, name)
-        fileHandler = open(self.path, "r")
-        self.list = []
-        constructor = None
-        if _format == "music":  # Escoger el constructor adecuado
-            constructor = Format.Music
-        elif _format == "videos":
-            constructor = Format.Videos
-        elif _format == "pictures":
-            constructor = Format.Pictures
-
-        for line in fileHandler:
-            name, author, album, year, _type, path = line.split("¬")
-            entry = constructor(name, author, album, year, _type, path)
-            self.list.append(entry)
-
-        self.length = len(self.list)
-        fileHandler.close()
+        self.open()
 
 
 class Playlist(Lists):
@@ -106,9 +109,13 @@ class Playlist(Lists):
         :param name: El nombre del archivo de la lista de reproducción.
         """
         super().__init__(_format, name)
+        playlists = PlaylistList(_format).GetPlaylists()
         self.path = _format + os.sep + "playlists" + os.sep + name
-        fileHandler = open(self.path, "w")
-        fileHandler.close()
+        if name[:-4] not in playlists:
+            fileHandler = open(self.path, "w")
+            fileHandler.close()
+        else:
+            self.open()
 
     def DeletePlaylist(self):
         """
@@ -134,3 +141,6 @@ class PlaylistList:
 
 
 # PRUEBAS
+main = Mainlist("music")
+b = Playlist("music", "b.txt")
+
