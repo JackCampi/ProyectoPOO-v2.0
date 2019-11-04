@@ -1,4 +1,5 @@
 #MenuFile
+import Mainlist from Files
 class MenuManagement:
 
     def __init__(self):
@@ -46,54 +47,51 @@ class MenuManagement:
         info = "¬".join([name, author, album, year, type, path])
         return info
 
-    def __SortListMenu(self, listObject):
+    def __SortListMenu(self, objectList, listName):
+        self.__listName = listName
+        self.__objectList = objectList
         print("\n===================0===================\n")
-        print("\tVER "+ listName.upper() +"\n") #LISTNAME
+        print("\tVER "+ self.__listName.upper() +"\n")
         print(self.__SortListMenuOptions())
         self.__Answer(["0","1","2","3","4","5"])
         if self.__answer == "0":
             return
         elif self.__answer == "1":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"name")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("name")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
-                wait = input("Pulse Enter para continuar...")
+                PrintList(_format,sortedList) # cambiar cuando cambie PrintList
+                self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "2":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"author")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("author")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
-                wait = input("Pulse Enter para continuar...")
+                PrintList(_format,sortedList) # cambiar cuando cambie PrintList
+                self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "3":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"album")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("album")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
-                wait = input("Pulse Enter para continuar...")
+                PrintList(_format,sortedList) # cambiar cuando cambie PrintList
+                self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "4":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"year")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("year")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
-                wait = input("Pulse Enter para continuar...")
+                PrintList(_format,sortedList) # cambiar cuando cambie PrintList
+                self.__wait = input("Pulse Enter para continuar...")
         elif self.__answer == "5":
-            listToPrint = files.ReadFormat(_format,listPath)
-            sortedList = Miscellaneous.SortList(listToPrint,"type")
-            if len(sortedList) == 0:
+            self.__sortedList = self.__objectList.SortList("type")
+            if len(self.__sortedList) == 0:
                 self.__emptyListMenu()
             else:
-                PrintList(_format,sortedList)
-                wait = input("Pulse Enter para continuar...")
-            SortListMenu(_format, listName)
+                PrintList(_format,sortedList) # cambiar cuando cambie PrintList
+                self.__wait = input("Pulse Enter para continuar...")
+        self.__SortListMenu(self.__objectList, self.__listName)
 
     def __SortListMenuOptions(self):
 	if self.__format == "music":
@@ -101,9 +99,9 @@ class MenuManagement:
 	else:
 		return "1. Por nombre.\n2. Por protagonista.\n3. Por álbum.\n4. Por año.\n5. Por tipo.\n\n0. Atrás.\n"
 
-    def __emptyListMenu(self, listName):
+    def __emptyListMenu(self):
         print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
-        print("No hay elementos en "+listName+".")
+        print("No hay elementos en "+ self.__listName +".")
         print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
         wait = input("Pulse Enter para continuar...")
         return
