@@ -67,15 +67,15 @@ class PlaylistMenu(MenuManagement):
             self.__PrintListHead()
             self.__PrintList(self.__results)
             self.__index = self.__SelectListElement(len(self.__results))
-    		self.__finalElement = self.__results[self.__index]
-    		self.__PrintListHead()
+            self.__finalElement = self.__results[self.__index]
+            self.__PrintListHead()
             self.__PrintListElement(self.__results,self.__index)
-    		print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
-    		self.__Answer(["0", "1"])
-    		if self.__answer == 0:
-    			print("No se añadió el elemento.\n")
-    			return
-    		else:
+            print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+            self.__Answer(["0", "1"])
+            if self.__answer == 0:
+                print("No se añadió el elemento.\n")
+                return
+            else:
     			self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
     			print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
 
