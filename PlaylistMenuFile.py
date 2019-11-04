@@ -53,24 +53,23 @@ class PlaylistMenu(MenuManagement):
     			self.__AddPlaylistElement()
         elif len(self.__results) == 1:
     		self.__finalElement = self.__results[0]
-    		PrintListHead(_format)#mirar como funciona esta funcion/esperar a que la cambien
-            #mirar como se llaman las propiedades de los objetos, se puede cambiar por un PrintListElement
-    		print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(finalElement["name"],finalElement["author"],finalElement["album"],finalElement["year"],finalElement["type"]))
+    		self.__PrintListHead()
+            self.__PrintListElement(self.__results)
     		print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
     		self.__Answer(["0", "1"])
     		if self.__answer == 0:
     			print("No se añadió el elemento.\n")
     			return
-    		else:
+            else:
                 self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
     			print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
         else:
-            #añadir in PrintListHead
-            #añardir un PrintList con los resultados
-    		self.__finalElement = self.__results[SelectListElement(len(results))]#cuando cambien SelectListElement
-    		PrintListHead(_format)#cuando cambien PrintListHead
-            #mirar como se llaman las propiedades de los objetos, se puede cambiar por un PrintListElement
-    		print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(finalElement["name"],finalElement["author"],finalElement["album"],finalElement["year"],finalElement["type"]))
+            self.__PrintListHead()
+            self.__PrintList(self.__results)
+            self.__index = self.__SelectListElement(len(self.__results))
+    		self.__finalElement = self.__results[self.__index]
+    		self.__PrintListHead()
+            self.__PrintListElement(self.__results,self.__index)
     		print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
     		self.__Answer(["0", "1"])
     		if self.__answer == 0:
@@ -108,9 +107,8 @@ class PlaylistMenu(MenuManagement):
     			self.__DeletePlaylistElement()
         elif len(self.__results) == 1:
     		self.__finalElement = self.__results[0]
-    		PrintListHead(_format) #mirar como funciona esta funcion/esperar a que la cambien
-            #mirar como se llaman las propiedades de los objetos, se puede cambiar por un PrintListElement
-    		print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(finalElement["name"],finalElement["author"],finalElement["album"],finalElement["year"],finalElement["type"]))
+            self.__PrintListHead()
+            self.__PrintListElement(self.__results)
     		print("¿Desea eliminar este elemento de " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
     		self.__Answer(["0", "1"])
     		if self.__answer == 0:
@@ -120,12 +118,12 @@ class PlaylistMenu(MenuManagement):
                 self.__playlist.DeleteEntry(self.__finalElement)#mirar que es param Entry
     			print("Se eliminó el elemento de " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
         else:
-    		#añadir in PrintListHead
-            #añardir un PrintList con los resultados
-    		self.__finalElement = self.__results[SelectListElement(len(results))]#cuando cambien SelectListElement
-    		PrintListHead(_format)  #mirar como funciona esta funcion/esperar a que la cambien
-            #mirar como se llaman las propiedades de los objetos, se puede cambiar por un PrintListElement
-    		print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(finalElement["name"],finalElement["author"],finalElement["album"],finalElement["year"],finalElement["type"]))
+    		self.__PrintListHead
+            self.__PrintList(self.__results)
+            self.__index = self.__SelectListElement(len(self.__results))
+    		self.__finalElement = self.__results[self.__index]
+    		self.__PrintListHead()
+            self.__PrintListElement(self.results,self.__index)
     		print("¿Desea eliminar este elemento de " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
     		self.__Answer(["0", "1"])
     		if self.__answer == 0:

@@ -120,13 +120,13 @@ class MenuManagement:
         for dicIndex in range(len(self.__list)):
             self.__PrintListElement(self.__list , dicIndex)
 
-    def __PrintListElement(_list,dicIndex = 0):
+    def __PrintListElement(self, _list,dicIndex = 0):
         self.__list = _list
         self.__index = dicIndex
         self.__toPrint = "{0}.\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\t|\t{5}\n"
-        print(self.__toPrint.format(self.__index+1,self.__list[self.__index].getName()
-            ,self.__list[self.__index].getAuthor(),self.__list[self.__index].getAlbum()
-            ,self.__list[self.__index].getYear(),self.__list[self.__index].getType()))
+        self.__item = self.__list[self.__index]
+        print(self.__toPrint.format(self.__index+1,self.__item.getName(),self.__item.getAuthor()
+                                    ,self.__item.getAlbum(),self.__item.getYear(),self.__item.getType()))
         return
 
     def __PrintListHead(self):
@@ -136,7 +136,7 @@ class MenuManagement:
             print("No.\t|\tNombre\t|\tProtagonista\t|\tÁlbum\t|\tAño\t|\tTipo\n")
         return
 
-    def __SelectListElement(listLength):
+    def __SelectListElement(self, listLength):
         self.__listLength = listLength
         print("\n¿Cuál desea seleccionar? ")
         self.__selectElement = self.__Answer([str(x) for x in range(1,self.__listLength+1)])
