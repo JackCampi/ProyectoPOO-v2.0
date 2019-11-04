@@ -52,7 +52,7 @@ class PlaylistMenu(MenuManagement):
     		else:
     			self.__AddPlaylistElement()
         elif len(self.__results) == 1:
-    		self.__finalElement = self.__results[0]
+            self.__finalElement = self.__results[0]
     		self.__PrintListHead()
             self.__PrintListElement(self.__results)
     		print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
@@ -106,7 +106,7 @@ class PlaylistMenu(MenuManagement):
     		else:
     			self.__DeletePlaylistElement()
         elif len(self.__results) == 1:
-    		self.__finalElement = self.__results[0]
+            self.__finalElement = self.__results[0]
             self.__PrintListHead()
             self.__PrintListElement(self.__results)
     		print("¿Desea eliminar este elemento de " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
