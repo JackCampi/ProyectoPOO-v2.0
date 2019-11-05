@@ -285,12 +285,12 @@ class PrincipalMenu (MenuManagement):
             else:
                 for playlistIndex in range(len(self.__playlistList)):
                     print(str(playlistIndex+1)+"\t|\t"+self.__playlistList[playlistIndex] + ".\n")
-                    print("\n1. Seleccionar una lista de reproducción.\n0. Atrás.\n")
-                    self.Answer(["0","1"])
-                    if self.answer == "1":
-                        self.playlistName = self.__playlistList[self.SelectListElement(len(self.__playlistList))]
-                        FifthMenu = PlaylistMenu(self.format, self.playlistName) #crea el objeto de meú de playlist
-                        FifthMenu.PlaylistMenu()
+                print("\n1. Seleccionar una lista de reproducción.\n0. Atrás.\n")
+                self.Answer(["0","1"])
+                if self.answer == "1":
+                    self.playlistName = self.__playlistList[self.SelectListElement(len(self.__playlistList))]
+                    FifthMenu = PlaylistMenu(self.format, self.playlistName) #crea el objeto de meú de playlist
+                    FifthMenu.PlaylistMenu()
         elif self.answer == "2":
             self.__NewPlaylistMenu() #falta pasar --> ya esta // corregir llamadas a esta función
         elif self.answer == "3":
