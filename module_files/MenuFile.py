@@ -417,13 +417,12 @@ class PlaylistMenu(MenuManagement):
             print("¿Desea añadir este elemento a " + self.playlistName + "?\n1. Confirmar.\n0. Cancelar.")
             self.Answer(["0", "1"])
             if self.answer == 0:
-                print("No se añadió el elemento.\n")
+                print("\nNo se añadió el elemento.\n")
                 return
             else:
                 self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
-                print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.playlistName + ". Volviendo al menú de la lista de reproducción.")
+                print("\nSe añadió \""+ self.__finalElement.getName() + "\" a " + self.playlistName + ". Volviendo al menú de la lista de reproducción.\n")
         else:
-            self.PrintListHead()
             self.PrintList(self.__results)
             self.index = self.SelectListElement(len(self.__results))
             self.__finalElement = self.__results[self.index]
@@ -432,11 +431,11 @@ class PlaylistMenu(MenuManagement):
             print("¿Desea añadir este elemento a " + self.playlistName + "?\n1. Confirmar.\n0. Cancelar.")
             self.Answer(["0", "1"])
             if self.answer == 0:
-                print("No se añadió el elemento.\n")
+                print("\nNo se añadió el elemento.\n")
                 return
             else:
                 self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
-                print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.playlistName + ". Volviendo al menú de la lista de reproducción.")
+                print("\nSe añadió \""+ self.__finalElement.getName() + "\" a " + self.playlistName + ". Volviendo al menú de la lista de reproducción.\n")
 
 
     def __PrintPlaylist(self):
