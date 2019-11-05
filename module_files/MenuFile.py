@@ -255,7 +255,7 @@ class PrincipalMenu (MenuManagement):
             for playlistIndex in range(len(self.__playlistList)):
                 print(str(playlistIndex+1)+"\t|\t"+ self.__playlistList[playlistIndex] )
             self.__playlistName = self.__playlistList[self.SelectListElement(len(self.__playlistList))]
-            self.__playlistObject = Playlist(self.format, self.__playlistName) #objeto de tipo Playlist
+            self.__playlistObject = Files.Playlist(self.format, self.__playlistName) #objeto de tipo Playlist
             self.__playlistObject.AddEntry(self.__toAddElement) #mirar ques es param Entry
             print("Se añadió \""+self.__toAddElement.getName()+ "\" a " + self.__playlistName + ".")
             return
@@ -322,7 +322,7 @@ class PrincipalMenu (MenuManagement):
                 if self.answer == "0":
                     return
                 elif self.answer == "1":
-                    toDeletePlaylist = Playlist(self.format, self.__foundPlaylist)
+                    toDeletePlaylist = Files.Playlist(self.format, self.__foundPlaylist)
                     toDeletePlaylist.DeletePlaylist() # funcion que elimine playlist
                     print("Se ha eliminado " + self.__foundPlaylist +".")
                     return
@@ -341,7 +341,7 @@ class PrincipalMenu (MenuManagement):
                 if self.answer == "0":
                     return
                 elif self.answer == "1":
-                    toDeletePlaylist = Playlist(self.format, self.__foundPlaylist)
+                    toDeletePlaylist = Files.Playlist(self.format, self.__foundPlaylist)
                     toDeletePlaylist.DeletePlaylist() # funcion que elimine playlist
                     print("Se ha eliminado " + self.__foundPlaylist +".")
             elif self.__toDo == "buscar":
@@ -353,7 +353,7 @@ class PrincipalMenu (MenuManagement):
         print("\n===================0===================\n")
         print("\tCREAR LISTA DE REPRODUCCIÓN\n")
         self.__playlistName = input("Nombre de la lista de reproducción: ")
-        playlist = Playlist(self.format,self.__playListName)
+        playlist = Files.Playlist(self.format,self.__playListName)
         print("La lista de reproducción ha sido creada.\n\n¿Desea añadir elementos a la lista?\n1. Aceptar.\n0. Cancelar.\n")
         self.Answer(["0","1"])
         if self.answer == "0":
@@ -373,7 +373,7 @@ class PlaylistMenu(MenuManagement):
     def __init__(self,_format, playlistName):
         self.format = _format
         self.__playListName = playlistName
-        self.__playlist = Playlist(self.format, self.__playListName)
+        self.__playlist = Files.Playlist(self.format, self.__playListName)
 
     def PlaylistMenu(self):
         print("\n===================0===================\n")
