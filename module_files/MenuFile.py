@@ -254,10 +254,10 @@ class PrincipalMenu (MenuManagement):
         else:
             for playlistIndex in range(len(self.__playlistList)):
                 print(str(playlistIndex+1)+"\t|\t"+ self.__playlistList[playlistIndex] )
-            self.__playlistName = self.__playlistList[self.SelectListElement(len(self.__playlistList))]
-            self.__playlistObject = Playlist(self.format, self.__playlistName) #objeto de tipo Playlist
+            self.playlistName = self.__playlistList[self.SelectListElement(len(self.__playlistList))]
+            self.__playlistObject = Playlist(self.format, self.playlistName) #objeto de tipo Playlist
             self.__playlistObject.AddEntry(self.__toAddElement) #mirar ques es param Entry
-            print("Se añadió \""+self.__toAddElement.getName()+ "\" a " + self.__playlistName + ".")
+            print("Se añadió \""+self.__toAddElement.getName()+ "\" a " + self.playlistName + ".")
             return
 
     def __ModifyElementMenu(self, oldElementObject):
@@ -288,8 +288,8 @@ class PrincipalMenu (MenuManagement):
                     print("\n1. Seleccionar una lista de reproducción.\n0. Atrás.\n")
                     self.Answer(["0","1"])
                     if self.answer == "1":
-                        self.__playlistName = self.__playlistList[self.SelectListElement(len(self.__playlistList))]
-                        FifthMenu = PlaylistMenu(self.format, self.__playlistName) #crea el objeto de meú de playlist
+                        self.playlistName = self.__playlistList[self.SelectListElement(len(self.__playlistList))]
+                        FifthMenu = PlaylistMenu(self.format, self.playlistName) #crea el objeto de meú de playlist
                         FifthMenu.PlaylistMenu()
         elif self.answer == "2":
             self.__NewPlaylistMenu() #falta pasar --> ya esta // corregir llamadas a esta función
@@ -352,8 +352,8 @@ class PrincipalMenu (MenuManagement):
     def __NewPlaylistMenu(self): #ya esta pasada a objetos. Solo faltan algunas funciones de juan
         print("\n===================0===================\n")
         print("\tCREAR LISTA DE REPRODUCCIÓN\n")
-        self.__playlistName = input("Nombre de la lista de reproducción: ")
-        playlist = Playlist(self.format,self.__playListName)
+        self.playlistName = input("Nombre de la lista de reproducción: ")
+        playlist = Playlist(self.format,self.playlistName)
         print("La lista de reproducción ha sido creada.\n\n¿Desea añadir elementos a la lista?\n1. Aceptar.\n0. Cancelar.\n")
         self.Answer(["0","1"])
         if self.answer == "0":
@@ -372,12 +372,12 @@ class PlaylistMenu(MenuManagement):
 
     def __init__(self,_format, playlistName):
         self.format = _format
-        self.__playListName = playlistName
-        self.__playlist = Playlist(self.format, self.__playListName)
+        self.playlistName = playlistName
+        self.__playlist = Playlist(self.format, self.playlistName)
 
     def PlaylistMenu(self):
         print("\n===================0===================\n")
-        print("\t" + self.__playlistName.upper() + "\n")
+        print("\t" + self.playlistName.upper() + "\n")
         print("1. Ver contenido de la lista.\n2. Añadir un elemento.\n3. Eliminar un elemento.\n4. Eliminar lista.\n\n0. Atrás.\n")
         self.Answer(["0", "1", "2", "3", "4"])
         if self.answer == "0":
@@ -414,14 +414,14 @@ class PlaylistMenu(MenuManagement):
             self.__finalElement = self.__results[0]
             self.PrintListHead()
             self.PrintListElement(self.__results)
-            print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+            print("¿Desea añadir este elemento a " + self.playlistName + "?\n1. Confirmar.\n0. Cancelar.")
             self.Answer(["0", "1"])
             if self.answer == 0:
                 print("No se añadió el elemento.\n")
                 return
             else:
                 self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
-                print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+                print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.playlistName + ". Volviendo al menú de la lista de reproducción.")
         else:
             self.PrintListHead()
             self.PrintList(self.__results)
@@ -429,25 +429,25 @@ class PlaylistMenu(MenuManagement):
             self.__finalElement = self.__results[self.index]
             self.PrintListHead()
             self.PrintListElement(self.__results,self.index)
-            print("¿Desea añadir este elemento a " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+            print("¿Desea añadir este elemento a " + self.playlistName + "?\n1. Confirmar.\n0. Cancelar.")
             self.Answer(["0", "1"])
             if self.answer == 0:
                 print("No se añadió el elemento.\n")
                 return
             else:
                 self.__playlist.AddEntry(self.__finalElement)#mirar que es param Entry
-                print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+                print("Se añadió \""+ self.__finalElement.getName() + "\" a " + self.playlistName + ". Volviendo al menú de la lista de reproducción.")
 
 
     def __PrintPlaylist(self):
-        self.SortListMenu(self.__playlist, self.__playListName)
+        self.SortListMenu(self.__playlist, self.playlistName)
         return
 
     def __DeletePlaylistElement(self):
         self.__element = input("¿Qué elemento desea eliminar? ")
         self.__results = self.__playlist.Search(self.__element)
         if len(self.__results) == 0:
-            self.NotFoundMenu(self.__playlistName)
+            self.NotFoundMenu(self.playlistName)
             if self.answer == "0":
                 return
             else:
@@ -456,14 +456,14 @@ class PlaylistMenu(MenuManagement):
             self.__finalElement = self.__results[0]
             self.PrintListHead()
             self.PrintListElement(self.__results)
-            print("¿Desea eliminar este elemento de " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+            print("¿Desea eliminar este elemento de " + self.playlistName + "?\n1. Confirmar.\n0. Cancelar.")
             self.Answer(["0", "1"])
             if self.answer == 0:
                 print("El elemento no se eliminó.\n")
                 return
             else:
                 self.__playlist.DeleteEntry(self.__finalElement)#mirar que es param Entry
-                print("Se eliminó el elemento de " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+                print("Se eliminó el elemento de " + self.playlistName + ". Volviendo al menú de la lista de reproducción.")
         else:
             self.PrintListHead()
             self.PrintList(self.__results)
@@ -471,11 +471,11 @@ class PlaylistMenu(MenuManagement):
             self.__finalElement = self.__results[self.index]
             self.PrintListHead()
             self.PrintListElement(self.results,self.index)
-            print("¿Desea eliminar este elemento de " + self.__playlistName + "?\n1. Confirmar.\n0. Cancelar.")
+            print("¿Desea eliminar este elemento de " + self.playlistName + "?\n1. Confirmar.\n0. Cancelar.")
             self.Answer(["0", "1"])
             if self.answer == 0:
                 print("El elemento no se eliminó.\n")
                 return
             else:
                 self.__playlist.DeleteEntry(self.__finalElement)#mirar que es param Entry
-                print("Se eliminó el elemento de " + self.__playlistName + ". Volviendo al menú de la lista de reproducción.")
+                print("Se eliminó el elemento de " + self.playlistName + ". Volviendo al menú de la lista de reproducción.")
