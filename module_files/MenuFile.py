@@ -1,5 +1,4 @@
-from Files import Playlist
-from Files import MainList
+import Files
 import os
 import Format
 
@@ -37,7 +36,7 @@ class MenuManagement:
         print("\n===================0===================\n")
         print("\tAÑADIR A MI"+ self.MenuFormat(False).upper() +"\n")
         self.newElement = self.TakeElementInfo()
-        self.mainList = MainList(self.format)
+        self.mainList = Files.MainList(self.format)
         self.mainList.AddEntry(self.newElement)
         print("\nEl elemento se ha añadido a \"mi{0}\".".format(self.MenuFormat(False)))
 
@@ -193,8 +192,8 @@ class PrincipalMenu (MenuManagement):
         if self.answer == "0":
             return
         elif self.answer == "1":
-            MainList = MainList(self.format)
-            self.SortListMenu(MainList , "Mi"+self.MenuFormat(False)) #MENU DE ORDENAR LISTA
+            _MainList = Files.MainList(self.format)
+            self.SortListMenu(_MainList , "Mi"+self.MenuFormat(False)) #MENU DE ORDENAR LISTA
         elif self.answer == "2":
             self.__SearchMenu()
         elif self.answer == "3":
@@ -205,8 +204,8 @@ class PrincipalMenu (MenuManagement):
         print("\n===================0===================\n")
         print("\tBUSCAR EN MI" + self.MenuFormat(False).upper()+ "\n")
         toSearch = input("¿Qué desea buscar? ")
-        MainList = MainList(self.format)
-        searchResults = MainList.Search(toSearch)
+        _MainList = Files.MainList(self.format)
+        searchResults = _MainList.Search(toSearch)
         if len(searchResults) == 0 :
             self.NotFoundMenu( "mi" + self.MenuFormat(False))
             if self.answer == "0":
@@ -237,8 +236,8 @@ class PrincipalMenu (MenuManagement):
             self.__AddToPlaylistMenu(foundElement)
             return
         elif self.answer == "2":
-            MainList = MainList(self.format)
-            MainList.DeleteEntry(foundElement)
+            _MainList = Files.MainList(self.format)
+            _MainList.DeleteEntry(foundElement)
             print("Se ha eliminado el elemento. Volviendo a \"MI" + self.MenuFormat(False).upper()+"\".")
             return
         elif self.answer == "3":
@@ -246,7 +245,7 @@ class PrincipalMenu (MenuManagement):
             return
 
     def __AddToPlaylistMenu(self, toAddElement): #toAddElement es el objeto de tipo format
-        self.__playlists = PlaylistList(self.format) #objeto tipo PlaylistList
+        self.__playlists = Files.PlaylistList(self.format) #objeto tipo PlaylistList
         self.__playlistList = self.__playlists.GetPlaylists()
         self.__toAddElement = toAddElement
         if len(self.__playlistList) == 0:
@@ -264,8 +263,8 @@ class PrincipalMenu (MenuManagement):
     def __ModifyElementMenu(self, oldElementObject):
         print("\nIngrese la nueva información del elemento.")
         newElementObject = self.TakeElementInfo()
-        MainList = MainList(self.format)
-        MainList.ModifyList(newElementObject,oldElementObject)
+        _MainList = Files.MainList(self.format)
+        _MainList.ModifyList(newElementObject,oldElementObject)
         print("Se ha modificado la información del elemento. Volviendo a \"MI" + self.MenuFormat(False).upper()+"\".")
 
     def __FourthMenu(self):
@@ -276,7 +275,7 @@ class PrincipalMenu (MenuManagement):
         if self.answer == "0":
             return
         elif self.answer == "1":
-            self.__playlists = PlaylistList(self.format) #objeto tipo PlaylistList
+            self.__playlists = Files.PlaylistList(self.format) #objeto tipo PlaylistList
             self.__playlistList = self.__playlists.GetPlaylists()
             if len(self.__playlistList) == 0:
                 print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
@@ -304,7 +303,7 @@ class PrincipalMenu (MenuManagement):
         self.__toDo = toDo
         print("\n===================0===================\n")
         self.__toSearch = input("¿Qué lista de reproducción desea "+ self.__toDo +"? ")
-        self.__playlists = PlaylistList(self.format) #objeto tipo PlaylistList
+        self.__playlists = Files.PlaylistList(self.format) #objeto tipo PlaylistList
         self.__results = self.__playlists.SearchPlaylist(self.__toSearch)
         if len(self.__results) == 0:
             print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
@@ -328,7 +327,7 @@ class PrincipalMenu (MenuManagement):
                     print("Se ha eliminado " + self.__foundPlaylist +".")
                     return
             elif self.__toDo == "buscar":
-                self.__playlist = PlaylistMenuFile(self.format,self.__foundPlaylist) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist = PlaylistMenu(self.format,self.__foundPlaylist) #instancia un objeto tipo PlaylistMenuFile
                 self.__playlist.PlaylistMenu() #llama al método PlaylistMenu de ese objeto
                 return
         else:
@@ -346,7 +345,7 @@ class PrincipalMenu (MenuManagement):
                     toDeletePlaylist.DeletePlaylist() # funcion que elimine playlist
                     print("Se ha eliminado " + self.__foundPlaylist +".")
             elif self.__toDo == "buscar":
-                self.__playlist = PlaylistMenuFile(self.format,self.__foundPlaylist) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist = PlaylistMenu(self.format,self.__foundPlaylist) #instancia un objeto tipo PlaylistMenuFile
                 self.__playlist.PlaylistMenu() #llama al método PlaylistMenu de ese objeto
                 return
 
@@ -362,7 +361,7 @@ class PrincipalMenu (MenuManagement):
         else:
             self.__adding = True
             while self.__adding == True:
-                self.__playlist = PlaylistMenuFile(self.format,self.playlistName) #instancia un objeto tipo PlaylistMenuFile
+                self.__playlist = PlaylistMenu(self.format,self.playlistName) #instancia un objeto tipo PlaylistMenuFile
                 self.__playlist.AddPlaylistElement()
                 print("¿Desea añadir otro elemento a la lista?\n1. Aceptar.\n0. Cancelar.\n")
                 self.Answer(["0","1"])
@@ -381,7 +380,7 @@ class PlaylistMenu(MenuManagement):
         print("\t" + self.__playlistName.upper() + "\n")
         print("1. Ver contenido de la lista.\n2. Añadir un elemento.\n3. Eliminar un elemento.\n4. Eliminar lista.\n\n0. Atrás.\n")
         self.Answer(["0", "1", "2", "3", "4"])
-        if answer == "0":
+        if self.answer == "0":
             return
         elif self.answer == "1":
             self.__PrintPlaylist()
@@ -403,7 +402,7 @@ class PlaylistMenu(MenuManagement):
 
     def AddPlaylistElement(self):
         self.__element = input("¿Qué elemento desea agregar a la lista? ")
-        self.mainList = MainList(self.format)
+        self.mainList = Files.MainList(self.format)
         self.__results = self.mainList.Search(self.__element)
         if len(self.__results) == 0:
             self.NotFoundMenu("mi" + self.MenuFormat(False))
