@@ -20,8 +20,8 @@ from module_files import MenuFile
 def main():
 	On = True
 	while On == True:
-        App = MenuFile.PrincipalMenu()
-        App.MainMenu()
+		App = MenuFile.PrincipalMenu()
+		App.MainMenu()
 		On = LogOut()
 
 def LogOut():
