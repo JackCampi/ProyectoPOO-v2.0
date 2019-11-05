@@ -1,6 +1,6 @@
 from module_files.Files import Playlist, PlaylistList, MainList
 import os
-import Format
+from module_files import Format
 
 class MenuManagement:
 
