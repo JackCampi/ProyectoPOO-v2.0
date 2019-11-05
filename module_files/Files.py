@@ -32,7 +32,7 @@ class Lists:
             constructor = Format.Pictures
 
         for line in fileHandler:
-            name, author, album, year, _type, path = line.split("¬")
+            name, author, album, year, _type, path = line.strip().split("¬")
             entry = constructor(name, author, album, year, _type, path)
             self.list.append(entry)
 
@@ -51,7 +51,7 @@ class Lists:
         """
         fileHandler = open(self.path, "w")
         for i in self.list:
-            fileHandler.write(i.ToString() + "\n")
+            fileHandler.write(i.string + "\n")
         fileHandler.close()
         self.Update()
 

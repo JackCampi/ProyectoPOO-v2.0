@@ -6,6 +6,7 @@ class Format:
         self.__album = album
         self.__type = type
         self.__path = path
+        self.string = "¬".join((name, author, year, album, type, path))
 
     def setName(self,newName):
         self.__name = newName
