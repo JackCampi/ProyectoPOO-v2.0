@@ -1,18 +1,27 @@
 """Módulo Files, maneja todo lo relacionado con los archivos y la
-    representación interna de los elementos"""
+    representación interna de los elementos y las listas principales y de reproducción."""
 import os
 from module_files import Format
 
 
 class Lists:
+    """
+    La clase Lists tiene las siguientes propiedades:
+    self.format (str): El formato ("music", "videos" o "pictures")
+    self.name (str): El nombre de archivo de la lista.
+    self.path (str): La ubicación del archivo en el PC ("C:\\..\\..\\carpeta\\..\\ejemplo.txt")
+        De ahora en adelante, al hablar de "el archivo" se refiere a este archivo.
+    self.list (list): Donde se almacenará en internamente en python la lista, contiene elementos del tipo
+        Music, Videos, Pictures (ver módulo Format)
+    self.length (int): tamaño de list.
+    """
     def __init__(self, _format, name="Main_list.txt"):
         """
-        Recibe el formato y el nombre de una lista, este nuevo objeto tiene las siguientes propiedades:
-        path: La ubicación de la lista.
-        list: La lista de entradas (ver clase Entry)
+        Crea una instancia de la clase Lists.
 
-        :param _format: El formato de la lista, puede ser "music", "pictures", o "videos."
-        :param name: El nombre del archivo de la lista, por defecto es "Main_list.txt
+        :param _format: Es el nombre del formato, tiene que ser "music", "videos" o "pictures".
+        :param name: "Es el nombre de la lista, por predeterminado es Main_list.txt, que es el nombre
+        de las listas principales de cada formato.
         """
         self.format = _format
         self.name = name
@@ -21,6 +30,9 @@ class Lists:
         self.length = 0
         
     def Open(self):
+        """
+        Abre el archivo y lo almacena en self.list.
+        """
         fileHandler = open(self.path, "r")
         self.list = []
         constructor = None
@@ -41,13 +53,13 @@ class Lists:
 
     def Update(self):
         """
-        Actualiza la lista de entradas.
+        Actualiza el tamaño de self.list.
         """
         self.length = len(self.list)
 
     def WriteList(self):
         """
-        Solo sobrescribe la información de la lista de diccionarios en el archivo.
+        Sobrescribe la información de self.list en el archivo.
         """
         fileHandler = open(self.path, "w")
         for i in self.list:
@@ -57,18 +69,18 @@ class Lists:
 
     def AddEntry(self, newEntry):
         """
-        Recibe una entrada y la añade a la lista de entradas.
+        Recibe una entrada (ver módulo Format), la añade a self.list y actualiza el archivo.
 
-        :param newEntry: Entrada que será agregada (ver clase Entry).
+        :param newEntry: Entrada que será agregada (ver módulo Format).
         """
         self.list.append(newEntry)
         self.WriteList()
 
     def DeleteEntry(self, entry):
         """
-        Recibe una entrada y la elimina de la lista de entradas.
+        Recibe una entrada y la elimina de la self.list y del archivo.
 
-        :param entry: Entrada que será eliminada (ver clase Entry).
+        :param entry: Entrada que será eliminada (ver módulo Format).
         """
         self.list.remove(entry)
         self.WriteList()
@@ -77,8 +89,8 @@ class Lists:
         """
         Sobrescribe la información de la nueva entrada en la vieja entrada.
 
-        :param newEntry: Nueva entrada (ver clase Entry).
-        :param oldEntry: Vieja entrada (ver clase Entry).
+        :param newEntry: Nueva entrada (ver módulo Format).
+        :param oldEntry: Vieja entrada (ver módulo Format).
         """
         self.DeleteEntry(oldEntry)
         self.AddEntry(newEntry)
@@ -125,6 +137,10 @@ class Lists:
 
 
 class MainList(Lists):
+    """
+    Hereda de Lists, sin cambios.
+    Recomedación: Llamar sin espeficificar el argumento name, está ahí por cuestiones de depuración.
+    """
     def __init__(self, _format, name="Main_list.txt"):
         """
         Recibe el formato y el nombre de una lista, este nuevo objeto tiene las siguientes propiedades:
@@ -139,6 +155,11 @@ class MainList(Lists):
 
 
 class Playlist(Lists):
+    """
+    Hereda de Lists, por lo que sus propiedades son las mismas excepto por:
+    self.path está modificado para acceder a la carpeta de playlists del formato,
+        ("C:\\..\\..\\carpeta\\..\\playlists\\ejemplo.txt").
+    """
     def __init__(self, _format, name):
         """
         Recibe el formato y el nombre de una lista de reproducción, para crear su archivo asociado,
@@ -146,7 +167,7 @@ class Playlist(Lists):
         la lista de reproducción.
 
         :param _format: El formato de la lista, puede ser "music", "pictures", o "videos."
-        :param name: El nombre del archivo de la lista de reproducción.
+        :param name: El nombre del archivo de la lista de reproducción SIN LA EXTENSIÓN.
         """
         super().__init__(_format, name)
         playlists = PlaylistList(_format).GetPlaylists()
@@ -166,9 +187,13 @@ class Playlist(Lists):
 
 class PlaylistList:
     """
-    Clase para sacar la lista de listas de reproducción.
+    Clase para sacar la lista de listas de reproducción SIN la extensión.
     """
     def __init__(self, _format):
+        """
+        Recibe el formato y hace una lista de todas las playlists del formato.
+        :param _format: (ver clase Lists)
+        """
         path = _format + os.sep + "playlists"
         self.__playlists = []
         for root, directory, files in os.walk(path):
@@ -177,6 +202,11 @@ class PlaylistList:
                     self.__playlists.append(file[:-4])
 
     def GetPlaylists(self):
+        """
+        Getter para la lista de playlists.
+
+        :return: (list) lista de playlists en el formato.
+        """
         return self.__playlists.copy()
 
     def SearchPlaylist(self, playlistName):
