@@ -15,7 +15,7 @@ ARCHIVOS DE CÓDIGO:
     - Format.py """
 
 import os
-from module_files import MenuFile
+from module_files import MenuFile , Format , Files
 
 def main():
 	On = True
