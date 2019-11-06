@@ -42,6 +42,13 @@ class MenuManagement:
         return
 
     def MenuFormat(self, onlyFormat = True):
+        """
+        Esta función devuelve strings que son utilizados en los menús para
+        completar los textos de los títulos o las opciones. De manera general,
+        devuelve una traducción del formato. El segundo argumento de esta función
+        hace que el string que se devuelve tenga los caracteres para completar
+        frases como "mi música" o "mis videos" (la letra s y un espacio).
+        """
         if self.format == "music":
             if onlyFormat != True:
                 return " música"
@@ -72,6 +79,11 @@ class MenuManagement:
         print("\nEl elemento se ha añadido a \"mi{0}\".".format(self.MenuFormat(False)))
 
     def TakeElementInfo(self):
+        """
+        Esta función corresponde al menú donde se toman los datos de un elemento
+        (nombre, autor, album, etc.) y devuelve un objeto del fotmato trabajado.
+        - RETURN: objeto del tipo del formato con todas sus caracteristicas iniciadas.
+        """
         name = input("Nombre: ")
         author = input("Autor: ")
         album = input("Álbum: ")
@@ -133,6 +145,12 @@ class MenuManagement:
         self.SortListMenu(self.objectList, self.listName)
 
     def SortListMenuOptions(self):
+        """
+        Esta función devuelve las opciones para el menú de ordenar listas
+        según el formato que se esté usando.
+        - Devuelve un strings con las opciones que el usuario puede escoger en el
+        menú de ordenar listas (Varían para música).
+        """
         if self.format == "music":
             return "1. Por nombre.\n2. Por artista.\n3. Por álbum.\n4. Por año.\n5. Por género.\n\n0. Atrás.\n"
         else:
@@ -146,6 +164,13 @@ class MenuManagement:
         return
 
     def NotFoundMenu(self, listName):
+        """
+        Cada vez que hay una busqueda y no se encuentren resultados se llama
+        a esta función que corresponde al menú donde el usuario escoge si
+        desea volver a buscar o salir al menú anterior.
+        Retorna la opción que el usuario ingrese para que esta pueda ser utilizada
+        en la función donde fue llamada.
+        """
         self.listName = listName
         print("No se encontró ningún elemento en " + self.listName +".\n")
         print("1. Volver a buscar.\n0. Atrás.\n")
@@ -171,6 +196,10 @@ class MenuManagement:
         return ans
 
     def PrintList(self, _list):
+        """
+        Esta función se encarga de llamar a los demás métodos para imprimir cualquier
+        lista por consola en el orden adecuado
+        """
         self._list = _list
         spaces = self.GetPrintLength(_list)
         self.PrintListHead(spaces)
@@ -198,6 +227,10 @@ class MenuManagement:
         return
 
     def SelectListElement(self, listLength):
+        """
+        Esta función recibe el largo de una lista y devuelve el indice del
+        elemento que el usuario escoja.
+        """
         self.listLength = listLength
         print("\n¿Cuál desea seleccionar? ")
         self.Answer([str(x) for x in range(1,self.listLength+1)])
@@ -424,13 +457,35 @@ class PrincipalMenu (MenuManagement):
             return
 
 class PlaylistMenu(MenuManagement):
+    """
+    La siguiente clase esta relacionada con todo el manejo de los menús de las playlist
+    se encuentra el metodo PlaylistMenu que imprime el menú para cada playlist,
+    además se definen los métodos nesesarios para el correcto manejo de
+    dichas listas(añadir y eliminar elementos, imprimir la playlist, etc...)
+    esta clase hereda de MenuManagement puesto que es una clase que añade
+    varios métodos para manejar todos los menús y se utilizan sus
+    funciones y propiedades heredadas.
+    """
 
     def __init__(self,_format, playlistName):
+        """
+        Función que inicializa un objeto del tipo menú de playlist, aqui se defien el formato de la playlist y el nombre.
+        Una vez teniendo el nombre se inicializa un objeto tipo playlist para enlazarlo y ser utilizado más adelante
+        para acceder a la lista y al archivo .txt.
+        """
         self.format = _format
         self.playlistName = playlistName
         self.__playlist = Playlist(self.format, self.playlistName)
 
     def PlaylistMenu(self):
+        """
+        Esta función corresponde al menú específico de las listas de reproducción,
+        desde aquí el usuario tiene más opciones que puede ejecutar sobre estas.
+        - La primera opción permite ver el contenido ordenado de la lista.
+        - La segunda opción permite añadir un elemento a la lista.
+        - La tercera opción busca un elemento dentro de la lista para eliminarlo.
+        - La cuarta opción elimina la lista de reproducción y retorna al cuarto menú.
+        """
         print("\n===================0===================\n")
         print("\t" + self.playlistName.upper() + "\n")
         print("1. Ver contenido de la lista.\n2. Añadir un elemento.\n3. Eliminar un elemento.\n4. Eliminar lista.\n\n0. Atrás.\n")
@@ -456,6 +511,15 @@ class PlaylistMenu(MenuManagement):
             return
 
     def AddPlaylistElement(self):
+        """
+        Función que se encarga de preguntarle al usuario qué elementos desea añadir a una
+        playlist, busca los elementos que el usuario introdujo por consola dentro
+        de la mainlist del formato y los añade a la playlist seleccionada.
+        (en caso de encontrar varias coincidencias con la busqueda, se le pide al usuario
+        que seleccione una de esas)
+        -Antes de añadirlo le pide al usuario confirmar que desea añadir el elemento.
+        -Al terminar, vuelve al menú específico de la lista.
+        """
         self.__element = input("¿Qué elemento desea agregar a la lista? ")
         self.mainList = MainList(self.format)
         self.__results = self.mainList.Search(self.__element)
@@ -493,10 +557,25 @@ class PlaylistMenu(MenuManagement):
 
 
     def __PrintPlaylist(self):
+        """
+        Método que se encarga de imprimir la playlist en consola por medio de un
+        método definido en la clase padre.
+        el metodo lo redirige a un menú donde pregunta en que orden desea visualizar
+        la información y lo imprime.
+        - Al terminar vuelve al menú específico de la lista.
+        """
         self.SortListMenu(self.__playlist, self.playlistName)
         return
 
     def __DeletePlaylistElement(self):
+        """
+        Esta función se encarga de buscar un elemento en la lista de reproducción
+        y llama a un metodo para elimininar este elemento del archivo .txt.
+        - En el caso de no encontrar el elemento en la lista, le da la opción al
+        usuario de volver a buscar o salir.
+        - Antes de eliminar un elemento le pide al usuario confirmar la acción.
+        - Al terminar, vuelve al menú específico de la lista.
+        """
         self.__element = input("¿Qué elemento desea eliminar? ")
         self.__results = self.__playlist.Search(self.__element)
         if len(self.__results) == 0:
