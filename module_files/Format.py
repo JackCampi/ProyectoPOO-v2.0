@@ -1,12 +1,12 @@
 class Format:
-    def __init__ (self, name, author, year, album, type, path):
+    def __init__ (self, name, author, album, year, type, path):
         self.__name = name
         self.__author = author
         self.__year = year
         self.__album = album
         self.__type = type
         self.__path = path
-        self.string = "¬".join((name, author, year, album, type, path))
+        self.string = "¬".join((name, author, album, year, type, path))
         nameL, authorL, yearL, albumL, typeL = map(len, (name, author, year, album, type))
         self.lengths = {"name": nameL, "author": authorL, "year": yearL, "album": albumL, "type": typeL}
 
