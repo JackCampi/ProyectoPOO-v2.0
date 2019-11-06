@@ -174,7 +174,7 @@ class Playlist(Lists):
         super().__init__(_format, name)
         playlists = PlaylistList(_format).GetPlaylists()
         self.path = _format + os.sep + "playlists" + os.sep + name + ".txt"
-        if name[:-4] not in playlists:
+        if name not in playlists:
             fileHandler = open(self.path, "a")
             fileHandler.close()
         else:
