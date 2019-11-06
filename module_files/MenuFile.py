@@ -145,14 +145,6 @@ class MenuManagement:
         for dicIndex in range(len(self._list)):
             self._list[dicIndex].Print(spaces, dicIndex)
 
-    def PrintListElement(self, _list, dicIndex=0):
-        self._list = _list
-        self.index = dicIndex
-        self.toPrint = "{0}.\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\t|\t{5}\n"
-        self._item = self._list[self.index] #cada item es un objeto de tipo Format
-        print(self.toPrint.format(self.index+1,self._item.getName(),self._item.getAuthor(),self._item.getAlbum(),self._item.getYear(),self._item.getType()))
-        return
-
     def PrintListHead(self, spaces=None):
         if self.format == "music":
             author = "Artista"
@@ -442,8 +434,7 @@ class PlaylistMenu(MenuManagement):
                 self.AddPlaylistElement()
         elif len(self.__results) == 1:
             self.__finalElement = self.__results[0]
-            self.PrintListHead()
-            self.PrintListElement(self.__results)
+            self.PrintList(self.__results)
             print("¿Desea añadir este elemento a " + self.playlistName + "?\n1. Confirmar.\n0. Cancelar.")
             self.Answer(["0", "1"])
             if self.answer == 0:
@@ -456,8 +447,7 @@ class PlaylistMenu(MenuManagement):
             self.PrintList(self.__results)
             self.index = self.SelectListElement(len(self.__results))
             self.__finalElement = self.__results[self.index]
-            self.PrintListHead()
-            self.PrintListElement(self.__results,self.index)
+            self.PrintList([self.__finalElement])
             print("¿Desea añadir este elemento a " + self.playlistName + "?\n1. Confirmar.\n0. Cancelar.")
             self.Answer(["0", "1"])
             if self.answer == 0:
@@ -483,8 +473,7 @@ class PlaylistMenu(MenuManagement):
                 self.__DeletePlaylistElement()
         elif len(self.__results) == 1:
             self.__finalElement = self.__results[0]
-            self.PrintListHead()
-            self.PrintListElement(self.__results)
+            self.PrintList(self.__results)
             print("¿Desea eliminar este elemento de " + self.playlistName + "?\n1. Confirmar.\n0. Cancelar.")
             self.Answer(["0", "1"])
             if self.answer == 0:
@@ -498,8 +487,7 @@ class PlaylistMenu(MenuManagement):
             self.PrintList(self.__results)
             self.index = self.SelectListElement(len(self.__results))
             self.__finalElement = self.__results[self.index]
-            self.PrintListHead()
-            self.PrintListElement(self.results,self.index)
+            self.PrintList([self.__finalElement])
             print("¿Desea eliminar este elemento de " + self.playlistName + "?\n1. Confirmar.\n0. Cancelar.")
             self.Answer(["0", "1"])
             if self.answer == 0:
