@@ -371,7 +371,7 @@ class PrincipalMenu (MenuManagement):
                 self.__playlist.PlaylistMenu() #llama al método PlaylistMenu de ese objeto
                 return
 
-    def __NewPlaylistMenu(self): #ya esta pasada a objetos. Solo faltan algunas funciones de juan
+    def __NewPlaylistMenu(self):
         print("\n===================0===================\n")
         print("\tCREAR LISTA DE REPRODUCCIÓN\n")
         self.playlistName = input("Nombre de la lista de reproducción: ")
@@ -389,6 +389,7 @@ class PrincipalMenu (MenuManagement):
                 self.Answer(["0","1"])
                 if self.answer == "0":
                     self.__adding = False
+            return
 
 class PlaylistMenu(MenuManagement):
 
