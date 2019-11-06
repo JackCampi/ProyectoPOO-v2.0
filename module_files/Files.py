@@ -30,7 +30,7 @@ class Lists:
         self.path = self.format + os.sep + self.name
         self.list = []
         self.length = 0
-        
+
     def Open(self):
         """
         Abre el archivo y lo almacena en self.list.
@@ -175,7 +175,7 @@ class Playlist(Lists):
         playlists = PlaylistList(_format).GetPlaylists()
         self.path = _format + os.sep + "playlists" + os.sep + name + ".txt"
         if name[:-4] not in playlists:
-            fileHandler = open(self.path, "w")
+            fileHandler = open(self.path, "a")
             fileHandler.close()
         else:
             self.Open()
