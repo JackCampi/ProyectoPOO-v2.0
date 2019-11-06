@@ -84,7 +84,15 @@ class Lists:
 
         :param entry: Entrada que será eliminada (ver módulo Format).
         """
-        self.list.remove(entry)
+        ans = []
+        for i in self.list:
+            equal = i.getName() == entry.getName() and i.getAuthor() == entry.getAuthor() \
+                    and i.getYear() == entry.getYear() and i.getAlbum() == entry.getAlbum() \
+                    and i.getType() == entry.getType()
+            if not equal:
+                ans.append(i)
+
+        self.list = ans.copy()
         self.WriteList()
 
     def ModifyList(self, newEntry, oldEntry):
