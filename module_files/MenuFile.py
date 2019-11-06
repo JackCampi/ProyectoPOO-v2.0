@@ -1,13 +1,36 @@
+""" En este módulo se encuentran las clases correspondientes a los menús de la
+aplicación. Cuenta con tres clases: MenuManagement, que contiene los métodos y
+propiedades que son utilizadas en las otras clases; PrincipalMenu, que, como
+su nombre lo indica, crea objetos de tipo menú principal donde comienzan las
+ramas de los menús que el usuario ve en consola; y por último, PlaylistMenu,
+que corresponde a los menús de las listas de reproducción con sus respectivos
+métodos y propiedades.
+
+Este módulo requiere de los módulos Files.py y Format.py."""
+
 from module_files.Files import Playlist, PlaylistList, MainList
 import os
 from module_files import Format
 
 class MenuManagement:
+    """Esta clase contiene los métodos y propiedades que comparten las clases de
+    menús. Algunos de ellos tienen que ver con esperar la respuesta del usuario,
+    imprimir los elementos de una lista, ordenar una lista por alguna característica,
+    entre otros."""
 
     def __init__(self):
         pass
 
     def Answer(self,options):
+        """Este método pide la entrada del usuario y la evalúa de manera que esta
+        corresponda a las opciones disponibles en cada menú.
+        - Recibe como parámetro la lista de los números de las opciones que el
+         usuario tiene disponibles.
+        - Si la Respuesta no es válida, la función se encarga de pedir una nueva
+        entrada.
+        - No retorna ningún valor; le asigna a la propiedad self.answer la Respuesta
+        del usuario para que esta sea evaluada luego de que este método se haya
+        llamado."""
         self.__validAnswer = False
         self.answer = "x"
         while self.__validAnswer == False:
@@ -16,7 +39,7 @@ class MenuManagement:
                 self.__validAnswer = True
             else:
                 print("Respuesta inválida, por favor intente de nuevo.")
-        return #listo
+        return
 
     def MenuFormat(self, onlyFormat = True):
         if self.format == "music":
@@ -33,6 +56,14 @@ class MenuManagement:
             return "videos" #listo
 
     def AddElementMenu(self):
+        """Este método toma los datos de un nuevo elemento para meterlo en la
+        lista principal del formato que se esté trabajando. Para ello llama al
+        método self.TakeElementInfo, el cual retorna un objeto del formato que
+        corresponda.
+        - Dentro de la clase se instancia un objeto de tipo MainList para Añadir
+        la nueva entrada.
+        - La función no retorna ningún valor, pero imprime un mensaje en consola
+        que avisa cuando el elemento se haya añadido."""
         print("\n===================0===================\n")
         print("\tAÑADIR A MI"+ self.MenuFormat(False).upper() +"\n")
         self.newElement = self.TakeElementInfo()
