@@ -257,8 +257,7 @@ class PrincipalMenu (MenuManagement):
     def __FoundElementMenu(self, foundElement):
         self.__foundElement = foundElement
         print("\n===================0===================\n")
-        self.PrintListHead()
-        print("1.\t|\t{0}\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\n".format(self.__foundElement.getName(),self.__foundElement.getAuthor(),self.__foundElement.getAlbum(),self.__foundElement.getYear(),self.__foundElement.getType()))
+        self.PrintList([self.__foundElement])
         print("¿Qué desea hacer con este elemento?\n1. Añadir a lista de reproducción.\n2. Eliminar.\n3. Modificar información.\n\n0. Atrás.")
         self.Answer(["0","1","2","3"])
         if self.answer == "0":
