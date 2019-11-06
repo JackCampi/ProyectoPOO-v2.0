@@ -26,7 +26,7 @@ class MenuManagement:
         corresponda a las opciones disponibles en cada menú.
         - Recibe como parámetro la lista de los números de las opciones que el
          usuario tiene disponibles.
-        - Si la Respuesta no es válida, la función se encarga de pedir una nueva
+        - Si la Respuesta no es válida, el método se encarga de pedir una nueva
         entrada.
         - No retorna ningún valor; le asigna a la propiedad self.answer la Respuesta
         del usuario para que esta sea evaluada luego de que este método se haya
@@ -60,7 +60,7 @@ class MenuManagement:
         else:
             if onlyFormat != True:
                 return "s videos"
-            return "videos" #listo
+            return "videos"
 
     def AddElementMenu(self):
         """Este método toma los datos de un nuevo elemento para meterlo en la
@@ -96,9 +96,15 @@ class MenuManagement:
             Element = Format.Pictures(name, author, album, year, type, path)
         else:
             Element = Format.Videos(name, author, album, year, type, path)
-        return Element #construye un objeto de tipo format
+        return Element
 
     def SortListMenu(self, objectList, listName):
+        """Este método corresponde al menú donde se ordenan las listas según la
+        característica que el usuario escoja. Una vez ordenada la lista, la imprime
+        y se vuelve a llamar a sí misma.
+        - Recibe como argumento la lista de objetos y el nombre de la lista a ordenar.
+        - Se pueden ordenar las listas por nombre, por autor, por álbum, por año y
+        por tipo o género"""
         self.listName = listName
         self.objectList = objectList #objeto de la clase Lists
         print("\n===================0===================\n")
@@ -157,6 +163,9 @@ class MenuManagement:
             return "1. Por nombre.\n2. Por protagonista.\n3. Por álbum.\n4. Por año.\n5. Por tipo.\n\n0. Atrás.\n"
 
     def EmptyListMenu(self):
+        """Este método es llamado cuando hay una lista vacía. Imprime en consola
+        el mensaje que le indica al usuario cuando no hay elementos en la lista
+        que está manejando."""
         print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
         print("No hay elementos en "+ self.listName +".")
         print("\n~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~\n")
@@ -169,7 +178,7 @@ class MenuManagement:
         a esta función que corresponde al menú donde el usuario escoge si
         desea volver a buscar o salir al menú anterior.
         Retorna la opción que el usuario ingrese para que esta pueda ser utilizada
-        en la función donde fue llamada.
+        en el método donde fue llamado.
         """
         self.listName = listName
         print("No se encontró ningún elemento en " + self.listName +".\n")
@@ -207,6 +216,8 @@ class MenuManagement:
             self._list[dicIndex].Print(spaces, dicIndex)
 
     def PrintListHead(self, spaces=None):
+        """Este método imprime en consola el encabezado de una lista con sus
+        elementos."""
         if self.format == "music":
             author = "Artista"
             _type = "Género"
@@ -241,8 +252,21 @@ class MenuManagement:
 
 
 class PrincipalMenu (MenuManagement):
+    """En esta clase se encuentran los métodos de los menús principales de la
+    aplicación. Desde esta clase comienzan las ramas de los menús, comenzando
+    desde el menú principal, hasta el menú de las listas de reproducción. Tiene
+    métodos adicionales que corresponden a los menús de búsqueda, los menús de
+    elementos específicos, los menús de añadir a lista de reproducción, etc.
+    - Esta clase hereda de MenuManagement, lo que implica que puede manejar los
+    métodos contenidos en esta."""
 
     def MainMenu(self):
+        """Esta función corresponde al menú principal en el cual el usuario
+        tiene la opción de seleccionar el formato al que quiere acceder (Música,
+        Fotos o Videos).
+        - Este menú le asigna el formato a la propiedad self.format, sobre el cual
+        se trabaja en el resto de menús. Luego llama al segundo menú.
+        - Se llama a sí misma una vez el método llamada termine."""
         print("\n===================0===================\n")
         print("\tMENÚ PRINCIPAL\n\n1. Música.\n2. Fotos.\n3. Videos.\n\n0. Salir.\n")
         self.Answer(["0","1","2","3"])
@@ -260,6 +284,11 @@ class PrincipalMenu (MenuManagement):
         self.MainMenu() #listo
 
     def __SecondMenu(self):
+        """Este método se encarga de mostrar el segundo menú y las opciones para
+        que el usuario pueda ver sus archivos multimedia o las listas de reproducción.
+        - La primera opción hace un llamado al tercer menú.
+        - La segunda opción llama al cuarto menú.
+        - Se llama a sí misma cuando las funciones llamadas se acaban."""
         print("\n===================0===================\n")
         print("\t"+ self.MenuFormat().upper()+"\n")
         print("1. Mi"+ self.MenuFormat(False) +".\n2. Listas de reproducción.\n\n0. Atrás.\n")
@@ -270,9 +299,16 @@ class PrincipalMenu (MenuManagement):
             self.__ThirdMenu()
         elif self.answer == "2":
             self.__FourthMenu()
-        self.__SecondMenu() #listo
+        self.__SecondMenu()
 
     def __ThirdMenu(self):
+        """Este método corresponde al tecer menú, en el cual el usuario puede
+        escoger entre ver de manera ordenada todas sus canciones fotos o videos,
+        buscar un elemento o añadir uno nuevo.
+        - La primera opción llama al método SortListMenu.
+        - La segunda opción llama al menú de búsqueda.
+        - La tercera opción llama al menú de añadir elemento.
+        - Se llama a sí misma cuando las funciones llamadas se acaban."""
         print("\n===================0===================\n")
         print("\tMI"+ self.MenuFormat(False).upper()+"\n")
         print("1. Ver mi"+ self.MenuFormat(False) +".\n2. Buscar.\n3. Añadir.\n\n0. Atrás.\n")
@@ -289,6 +325,16 @@ class PrincipalMenu (MenuManagement):
         self.__ThirdMenu()
 
     def __SearchMenu(self):
+        """Este método corresponde al menú de búsqueda, en el cual el usuario
+        introduce una información sobre un elemento, ya sea el nombre, el álbum, el
+        año, etc. y se imprimen las posibles opciones para dicha búsqueda.
+        - En el caso de no haber resultados llama a NotFoundMenu y le pregunta al
+        usuario si desea realizar la búsqueda de nuevo o salir al tercer menú.
+        - En el caso de haber más de un resultado, le pide al usuario seleccionar
+        algún elemento.
+        - Con el elemento encontrado llama a FoundElementMenu, donde el usuario
+        dispone de más opciones.
+        - Al terminar, vuelve al tercer menú."""
         print("\n===================0===================\n")
         print("\tBUSCAR EN MI" + self.MenuFormat(False).upper()+ "\n")
         toSearch = input("¿Qué desea buscar? ")
@@ -312,6 +358,17 @@ class PrincipalMenu (MenuManagement):
             return
 
     def __FoundElementMenu(self, foundElement):
+        """Esta función corresponde al menú que el usuario dispone cuando encuentra
+        un elemento. Desde este menú puede añadir dicho elemento a una lista de
+        reproducción, eliminarlo o modificar su información.
+        - Recibe como argumentos el objeto del elemento que se encontró en el SearchMenu.
+        - La primera opción lleva al usuario a un menú donde seleccionará la lista
+        a la que quiere añadir el elemento encontrado.
+        - La segunda opción elimina el elemento mediante el método DeleteEntry de
+        la clase MainList.
+        - La tercera opción lleva al menú de modificación, donde se ingresa la nueva
+        información del elemento y se reemplaza por la información del viejo elemento.
+        - Al terminar, vuelve al tercer menú."""
         self.__foundElement = foundElement
         print("\n===================0===================\n")
         self.PrintList([self.__foundElement])
@@ -331,7 +388,14 @@ class PrincipalMenu (MenuManagement):
             self.__ModifyElementMenu(foundElement)
             return
 
-    def __AddToPlaylistMenu(self, toAddElement): #toAddElement es el objeto de tipo format
+    def __AddToPlaylistMenu(self, toAddElement):
+        """Esta función corresponde al menú donde el usuario selecciona la lista de
+        reproducción a la que quiera añadir el elemento encontrado.
+        - Como argumento recibe el objeto del elmento encontrado en el menú anterior.
+        - El programa avisa cuando no hay listas de reproducción.
+        - Esta función llama a AddEntry de la librería files para añadir el elemento
+        a la lista.
+        - Al terminar, el programa se devuelve al tecer menú."""
         self.__playlists = PlaylistList(self.format) #objeto tipo PlaylistList
         self.__playlistList = self.__playlists.GetPlaylists()
         self.__toAddElement = toAddElement
@@ -343,11 +407,17 @@ class PrincipalMenu (MenuManagement):
                 print(str(playlistIndex+1)+"\t|\t"+ self.__playlistList[playlistIndex] )
             self.playlistName = self.__playlistList[self.SelectListElement(len(self.__playlistList))]
             self.__playlistObject = Playlist(self.format, self.playlistName) #objeto de tipo Playlist
-            self.__playlistObject.AddEntry(self.__toAddElement) #mirar ques es param Entry
+            self.__playlistObject.AddEntry(self.__toAddElement)
             print("Se añadió \""+self.__toAddElement.getName()+ "\" a " + self.playlistName + ".")
             return
 
     def __ModifyElementMenu(self, oldElementObject):
+        """Esta función corresponde al menú donde el usuario ingresa la nueva
+        información de un elemento para modificarlo.
+        -Recibe como argumento el objeto del elemento que se desea modificar.
+        - Llama a TakeElementInfo para tomar la nueva información, y a ModifyList
+        de la clase MainList para reemplazar el archivo principal.
+        - Al terminar, vuelve al tercer menú."""
         print("\nIngrese la nueva información del elemento.")
         newElementObject = self.TakeElementInfo()
         _MainList = MainList(self.format)
@@ -355,6 +425,17 @@ class PrincipalMenu (MenuManagement):
         print("Se ha modificado la información del elemento. Volviendo a \"MI" + self.MenuFormat(False).upper()+"\".")
 
     def __FourthMenu(self):
+        """Este método corresponde al CUARTO menú, en el cual se encuentran las
+        diferentes opciones para las listas de reproducción.
+        - La primera opción muestra las playlist creadas y le pregunta al usuario si
+        desea seleccionar alguna. En el caso de seleccionar alguna, crea un objeto
+        de tipo PlaylistMenu, donde se despliega un menú para una lista en
+        específico. Del caso contrario, el método se llama a sí mismo.
+        - La segunda opción llama al menú donde se crean nuevas listas de reproducción.
+        - La tecrcera opción permite buscar listas de reproducción.
+        - La cuarta opción elimina alguna playlist.
+        - Cuando las funciones terminan, el método se llama a sí mismo hasta que el
+        usuario introduce la opción '0'."""
         print("\n===================0===================\n")
         print("\tLISTAS DE REPRODUCCIÓN DE " + self.MenuFormat().upper() + "\n")
         print("1. Mis listas.\n2. Crear lista.\n3. Buscar lista.\n4. Eliminar lista.\n\n0. Atrás.\n")
@@ -386,8 +467,14 @@ class PrincipalMenu (MenuManagement):
             self.__SearchPlaylistMenu("eliminar") #faltapasar --> ya esta // corregir llamadas a esta función
         self.__FourthMenu()
 
-    def __SearchPlaylistMenu(self, toDo = "buscar"): #ya esta pasada a objetos //si quieres mirar instanciacion de objetos
-        self.__toDo = toDo
+    def __SearchPlaylistMenu(self, toDo = "buscar"):
+        """Esta función sirve para buscar una lista de reproducción y eliminarla o
+		ir a su menú específico, dependiendo del argumento toDo:
+			° "buscar" (PREDERETMINADO): Crea el objeto del menú específico de
+			playlist luego de encontrar la lista de reproducción.
+			° "eliminar": Elimina la lista encontrada luego de confirmar si el usuario
+			desea eliminarla.
+		-Esta función no retorna ningún valor. Al terminar vuelve al cuarto menú."""
         print("\n===================0===================\n")
         self.__toSearch = input("¿Qué lista de reproducción desea "+ self.__toDo +"? ")
         self.__playlists = PlaylistList(self.format) #objeto tipo PlaylistList
@@ -437,6 +524,11 @@ class PrincipalMenu (MenuManagement):
                 return
 
     def __NewPlaylistMenu(self):
+        """Este método se encarga de crear una nueva lista de reproducción y de
+        agregar elementos a esta.
+        - Contiene un bucle que termina cuando el usuario deja de añadir elementos
+        a la lista.
+        - Al terminar, vuelve al cuarto menú."""
         print("\n===================0===================\n")
         print("\tCREAR LISTA DE REPRODUCCIÓN\n")
         self.playlistName = input("Nombre de la lista de reproducción: ")
