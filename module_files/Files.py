@@ -1,5 +1,7 @@
-"""Módulo Files, maneja todo lo relacionado con los archivos y la
-    representación interna de los elementos y las listas principales y de reproducción."""
+"""Módulo Files, maneja:
+    Los archivos y la representación interna de los elementos.*
+    Las listas principales y de reproducción.
+    *Más en el módulo Format."""
 import os
 from module_files import Format
 

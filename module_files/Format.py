@@ -7,6 +7,8 @@ class Format:
         self.__type = type
         self.__path = path
         self.string = "¬".join((name, author, year, album, type, path))
+        nameL, authorL, yearL, albumL, typeL = map(len, (name, author, year, album, type))
+        self.lengths = {"name": nameL, "author": authorL, "year": yearL, "album": albumL, "type": typeL}
 
     def setName(self,newName):
         self.__name = newName
@@ -49,6 +51,15 @@ class Format:
 
     def getPath(self):
         return self.__path
+
+    def Print(self, spaces, dicIndex=0):
+        toPrint = str(dicIndex + 1) + "\t|"
+        toPrint += self.__name + (" " * (spaces["name"] - len(self.__name))) + "|"
+        toPrint += self.__author + (" " * (spaces["author"] - len(self.__author))) + "|"
+        toPrint += self.__album + (" " * (spaces["album"] - len(self.__album))) + "|"
+        toPrint += self.__year + (" " * (spaces["year"] - len(self.__year))) + "|"
+        toPrint += self.__type + (" " * (spaces["type"] - len(self.__type))) + "|"
+        print(toPrint)
 
 class Music(Format):
     pass

@@ -121,13 +121,31 @@ class MenuManagement:
         self.Answer(["0","1"])
         return
 
+    def GetPrintLength(self, _list):
+        """
+        Recibe una lista de diccionarios.
+
+        Devuelve un diccionario con las llaves ("name", "author", "album", "year", "type"),
+        el valor de cada llave es un entero con el tamaño de la cadena más grande encontrada
+        en esa columna de la lista.
+        """
+        ans = {}
+        keys = ("name", "author", "album", "year", "type")
+        for key in keys:
+            temp = []
+            for entry in _list:
+                temp.append(entry.lengths[key])
+            ans[key] = max(temp)
+        return ans
+
     def PrintList(self, _list):
         self._list = _list
-        self.PrintListHead()
+        spaces = self.GetPrintLength(_list)
+        self.PrintListHead(spaces)
         for dicIndex in range(len(self._list)):
-            self.PrintListElement(self._list , dicIndex)
+            self._list[dicIndex].Print(spaces, dicIndex)
 
-    def PrintListElement(self, _list,dicIndex = 0):
+    def PrintListElement(self, _list, dicIndex=0):
         self._list = _list
         self.index = dicIndex
         self.toPrint = "{0}.\t|\t{1}\t|\t{2}\t|\t{3}\t|\t{4}\t|\t{5}\n"
@@ -135,11 +153,24 @@ class MenuManagement:
         print(self.toPrint.format(self.index+1,self._item.getName(),self._item.getAuthor(),self._item.getAlbum(),self._item.getYear(),self._item.getType()))
         return
 
-    def PrintListHead(self):
+    def PrintListHead(self, spaces=None):
         if self.format == "music":
-            print("No.\t|\tNombre\t|\tArtista\t|\tÁlbum\t|\tAño\t|\tGénero\n")
+            author = "Artista"
+            _type = "Género"
         else:
-            print("No.\t|\tNombre\t|\tProtagonista\t|\tÁlbum\t|\tAño\t|\tTipo\n")
+            author = "Protagonista"
+            _type = "Género"
+
+        if spaces == None:
+            print("No.\t|\tNombre\t|\t{0}\t|\tÁlbum\t|\tAño\t|\t{1}\n".format(author, _type))
+        else:
+            toPrint = "No.\t|"
+            toPrint += "Nombre" + (" " * (spaces["name"] - len("Nombre"))) + "|"
+            toPrint += author + (" " * (spaces["author"] - len(author))) + "|"
+            toPrint += "Álbum" + (" " * (spaces["album"] - len("Álbum"))) + "|"
+            toPrint += "Año" + (" " * (spaces["year"] - len("Año"))) + "|"
+            toPrint += _type + (" " * (spaces["type"] - len(_type))) + "|\n"
+            print(toPrint)
         return
 
     def SelectListElement(self, listLength):
