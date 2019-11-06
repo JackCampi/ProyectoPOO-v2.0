@@ -129,13 +129,14 @@ class MenuManagement:
         el valor de cada llave es un entero con el tamaño de la cadena más grande encontrada
         en esa columna de la lista.
         """
-        ans = {}
         keys = ("name", "author", "album", "year", "type")
-        for key in keys:
-            temp = []
+        spanishKeys = ("Nombre", "Artista", "Álbum", "Año", "Género")
+        ans = {}
+        for i in range(len(keys)):
+            temp = [len(spanishKeys[i])]
             for entry in _list:
-                temp.append(entry.lengths[key])
-            ans[key] = max(temp)
+                temp.append(entry.lengths[keys[i]])
+            ans[keys[i]] = max(temp)
         return ans
 
     def PrintList(self, _list):
